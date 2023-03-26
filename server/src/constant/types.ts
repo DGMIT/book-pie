@@ -1,7 +1,8 @@
 const TYPES = {
     mysqlPool: Symbol.for('mysqlPool'),
-    // Robot: Symbol('Robot')
-
+    FooService: Symbol.for('FooService'),
+    BookService: Symbol.for('BookService'),
+    IBookRepository: Symbol.for('IBookRepository'),
 }
 
 export default TYPES;

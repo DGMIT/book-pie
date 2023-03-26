@@ -1,45 +1,77 @@
 import * as express from "express";
-import { interfaces, controller, httpGet, httpPost, httpDelete, request, queryParam, response, requestParam } from "inversify-express-utils";
-import { injectable, inject } from "inversify";
+import { interfaces, controller, httpGet, httpPost, httpDelete, httpPut, request, queryParam, response, requestParam } from "inversify-express-utils";
+import { inject } from "inversify";
 
-//api 라우팅. 북 컨트롤러에게 북 서비스 주입하기
+import {BookService} from "../services/book.service";
+import TYPES from "../constant/types";
 
+@controller("/book")
+export class BookController implements interfaces.Controller {
 
-// inversify 로 express 서버 만들기 예시 코드 (공식 깃헙 출처)
+    constructor( @inject(TYPES.BookService) private bookService: BookService ) {}
 
-// import { IFooService } from "../services/fooService";
+    @httpGet("/")
+    async getAll(@response() res: express.Response) {
 
-// @controller("/foo")
-// export class FooController implements interfaces.Controller {
+        try{
+            const data = await this.bookService.getList();
+            res.status(200).json(data);
+        }catch(err) {
+            res.status(500).json('err');
+        }
+    }
 
-//     constructor( @inject("FooService") private fooService: IFooService ) {}
+    /*
+    @httpGet("/:id")
+    private async getById(@requestParam("id") id: string, @response() res: express.Response) {
+        try {
+            const book: Book = await this.bookService.getById(id);
+            if (!book) {
+                res.sendStatus(404);
+            } else {
+                res.status(200).json(book);
+            }
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    }
 
-//     @httpGet("/")
-//     private index(@request() req: express.Request, @response() res: express.Response, @next() next: express.NextFunction): string {
-//         return this.fooService.get(req.query.id);
-//     }
+    @httpPost("/")
+    private async create(@request() req: express.Request, @response() res: express.Response) {
+        try {
+            const book: Book = await this.bookService.create(req.body);
+            res.status(201).json(book);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    }
 
-//     @httpGet("/")
-//     private list(@queryParam("start") start: number, @queryParam("count") count: number): string {
-//         return this.fooService.get(start, count);
-//     }
+    @httpPut("/:id")
+    private async update(@requestParam("id") id: string, @request() req: express.Request, @response() res: express.Response) {
+        try {
+            const updatedBook: Book = await this.bookService.update(id, req.body);
+            if (!updatedBook) {
+                res.sendStatus(404);
+            } else {
+                res.status(200).json(updatedBook);
+            }
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    }
 
-//     @httpPost("/")
-//     private async create(@request() req: express.Request, @response() res: express.Response) {
-//         try {
-//             await this.fooService.create(req.body);
-//             res.sendStatus(201);
-//         } catch (err) {
-//             res.status(400).json({ error: err.message });
-//         }
-//     }
-
-//     @httpDelete("/:id")
-//     private delete(@requestParam("id") id: string, @response() res: express.Response): Promise<void> {
-//         return this.fooService.delete(id)
-//             .then(() => res.sendStatus(204))
-//             .catch((err: Error) => {
-//                 res.status(400).json({ error: err.message });
-//             });
-//     }
-// }
+    @httpDelete("/:id")
+    private async delete(@requestParam("id") id: string, @response() res: express.Response) {
+        try {
+            const deletedBook: Book = await this.bookService.delete(id);
+            if (!deletedBook) {
+                res.sendStatus(404);
+            } else {
+                res.sendStatus(204);
+            }
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    }
+    */
+}

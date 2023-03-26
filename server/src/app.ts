@@ -4,6 +4,8 @@ import * as cors from 'cors';
 import * as mysql from 'mysql2';
 import { InversifyExpressServer } from 'inversify-express-utils';
 import container from './config/ioc.container';
+import "./controller/book.controller"
+
 
 const server = new InversifyExpressServer(container);
 
