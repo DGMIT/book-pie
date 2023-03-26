@@ -3,23 +3,15 @@ import TYPES from "../constant/types";
 import * as mysql from "mysql2/promise";
 import { Response, BookListResponse } from "../models/book.model";
 import { Book } from "../models/book.model";
+import { DBexecute } from "./dbExecute.service";
 
 
 @injectable()
 export class BookService {
+    constructor(
+        @inject(TYPES.DBexecute) private dbExecute: DBexecute
+    ) {}
     async getList(): Promise<Response | BookListResponse> {
-        // 데이터베이스 연결 설정
-        const connection = await mysql.createConnection({
-            host: "localhost",
-            user: "root",
-            password: "localmysql1234",
-            database: "BOOK_PIE",
-        });
-
-        // 데이터베이스 연결
-        await connection.connect();
-
-        // 데이터베이스 쿼리 실행
         const queryStr = 
         `SELECT
             BP_BOOK_ID as 'bookId',
@@ -37,7 +29,9 @@ export class BookService {
             BP_BOOK
         WHERE
             DEL_YN = 'N';`;
-        let queryResult = await connection.query(queryStr);
+
+        let queryResult = await this.dbExecute.execute(queryStr);
+
         const [row, column] = queryResult;
         // console.log(row);
 
@@ -54,9 +48,11 @@ export class BookService {
             }
         }
 
-        // 데이터베이스 연결 종료
-        connection.end();
 
         return result;
     }
+
+    // async getById(id: number): Promise<Book> {
+
+    // }
 }

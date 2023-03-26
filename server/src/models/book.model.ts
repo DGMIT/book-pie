@@ -1,15 +1,15 @@
 export interface Book {
     bookId: number,
     title: string,
-    author: string,
-    publisher: string,
+    author?: string,
+    publisher?: string,
     startPageNum: number,
     endPageNum: number,
     startDate: string,
     endDate: string,
     weekendIncludeYN: 'Y' | 'N',
-    writtenDatetime: string,
-    updateDatetime: string
+    writtenDatetime: null | string,
+    updateDatetime: null | string
 }
 
 export interface Response {
