@@ -11,16 +11,16 @@ export class BookController implements interfaces.Controller {
     constructor( @inject(TYPES.BookService) private bookService: BookService ) {}
 
     @httpGet("/")
-    async getAll(@response() res: express.Response) {
-
+    async getList(@response() res: express.Response) {
         try{
             const data = await this.bookService.getList();
             res.status(200).json(data);
         }catch(err) {
-            res.status(500).json('err');
+            res.status(500).json(err);
         }
     }
 
+    //
     /*
     @httpGet("/:id")
     private async getById(@requestParam("id") id: string, @response() res: express.Response) {
