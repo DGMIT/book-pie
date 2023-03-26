@@ -3,8 +3,6 @@ import BookList from "../components/book/BookList";
 import FloatingBtn from "../components/book/FloatingBtn";
 
 const BookPage = () => {
-
-
     return (
         <>
         <ReadCountBox/>

@@ -48,7 +48,8 @@ const BookBox = ({data}: {data: Book}) => {
         <StyledBookBox>
             <div className="box-top">
                 <p>{`${startDate} ~ ${endDate} (${gapDay}일)`}</p>
-                <button>...</button>
+                <button>수정</button>
+                <button>삭제</button>
             </div>
             <div className="main">
                 <div className="chart">

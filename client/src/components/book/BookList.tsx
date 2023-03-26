@@ -8,7 +8,6 @@ const BookList = () => {
         axios
             .get("http://localhost:4000/book")
             .then((response) => {
-                console.log(response);
                 const data = response.data;
                 if(data.result === 'OK') {
                     setBookList(data.bookList);
