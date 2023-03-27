@@ -14,7 +14,7 @@ const ReportPage = () => {
         startPageNum: 8,
         title: "이펙티브 타입스크립",
         updateDatetime: null,
-        weekendIncludeYN: 'N',
+        // weekendIncludeYN: 'N',
         writtenDatetime: "2023-03-26T14:23:23.000Z",
     };
 
