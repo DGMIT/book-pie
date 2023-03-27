@@ -190,8 +190,8 @@ const BookModal = ({ setModalIsOpen }: Props) => {
                     <div>
                         <div>총페이지: {totalPage}p</div>
                         <div>총 기간: {totalPeriod}일</div>
-                        <div>일일 권장 독서량: 7p</div>
-                        <span>총 페이지 / 기간 = {totalPage} p / {totalPeriod} 일 = {Math.ceil(totalPage / totalPeriod)} p (반올림)</span>
+                        <div>일일 권장 독서량: {Math.ceil(totalPage / totalPeriod)}p</div>
+                        <span>총 페이지 / 기간 = {totalPage} p / {totalPeriod} 일 = {Math.ceil(totalPage / totalPeriod)}p (반올림)</span>
                     </div>
                 </div>
                 <button type="reset" onClick={() => setModalIsOpen(false)}>
