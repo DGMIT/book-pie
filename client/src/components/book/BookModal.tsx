@@ -125,7 +125,7 @@ const BookModal = ({ modalIsOpen, setModalIsOpen, data }: Props) => {
                     setIsError(false);
                     alert('도서 수정이 완료되었습니다.');
                     setModalIsOpen(false);
-                    window.location.replace('/');
+                    window.location.reload();
                 }
             })
             .catch((error) => {
