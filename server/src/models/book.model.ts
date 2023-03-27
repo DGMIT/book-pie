@@ -21,3 +21,14 @@ export interface BookListResponse extends Response{
     totalCount: number,
     bookList: Book[]
 }
+
+export interface BookCreateRequest {
+    title: string,
+    author?: string,
+    publisher?: string,
+    startPageNum: number,
+    endPageNum: number,
+    startDate: string,
+    endDate: string,
+    // weekendIncludeYN: 'Y' | 'N'
+}

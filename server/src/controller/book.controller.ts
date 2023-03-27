@@ -37,8 +37,8 @@ export class BookController implements interfaces.Controller {
     @httpPost("/")
     private async create(@request() req: express.Request, @response() res: express.Response) {
         try {
-            // const book: Book = await this.bookService.create(req.body);
-            res.status(201).json();
+            const data = await this.bookService.create(req.body);
+            res.status(201).json(data);
         } catch (err) {
             res.status(500).json({ error: err.message });
         }

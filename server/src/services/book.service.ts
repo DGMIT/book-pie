@@ -1,7 +1,7 @@
 import { injectable, inject } from "inversify";
 import TYPES from "../constant/types";
 import * as mysql from "mysql2/promise";
-import { Response, BookListResponse } from "../models/book.model";
+import { Response, BookListResponse, BookCreateRequest } from "../models/book.model";
 import { Book } from "../models/book.model";
 import { DBexecute } from "./dbExecute.service";
 
@@ -28,7 +28,9 @@ export class BookService {
         FROM 
             BP_BOOK
         WHERE
-            DEL_YN = 'N';`;
+            DEL_YN = 'N'
+        ORDER BY 
+            id DESC;`;
 
         let queryResult = await this.dbExecute.execute(queryStr);
 
@@ -47,12 +49,57 @@ export class BookService {
                 bookList: row as Book[]
             }
         }
-
-
         return result;
     }
 
     // async getById(id: number): Promise<Book> {
 
     // }
+
+    async create(reqBody: BookCreateRequest): Promise<Response> {
+        
+        // console.log(reqBody);
+        const {
+            title,
+            author,
+            publisher,
+            startPageNum,
+            endPageNum,
+            startDate,
+            endDate
+        } = reqBody;
+        
+        const queryStr = 
+        `INSERT INTO BP_BOOK
+        (
+            BP_BOOK_TITLE,
+            ${author ? 'BP_BOOK_AUTHOR,' : ''}
+            ${publisher ? 'BP_BOOK_PUBLISHER,' : ''}
+            BP_BOOK_START_NUM,
+            BP_BOOK_END_NUM,
+            BP_BOOK_START_DT,
+            BP_BOOK_END_DT
+        )
+        VALUES 
+        (
+            '${title}',
+            ${author ? `'${author}',` : ''}
+            ${publisher ? `'${publisher}',` : ''}
+            '${startPageNum}',
+            '${endPageNum}',
+            '${startDate}',
+            '${endDate}'
+        );`;
+        let queryResult = await this.dbExecute.execute(queryStr);
+
+        console.log(queryResult);
+
+        let result: Response;
+
+        result = {
+            result: 'OK'
+        }
+        
+        return result;
+    }
 }
