@@ -5,6 +5,7 @@ import axios from "axios";
 import { useState } from "react";
 import BookModal from "./BookModal";
 import { useLocation } from 'react-router-dom';
+import moment from "moment";
 
 const StyledBookBox = styled.div`
     border: 1px solid #ddd;
@@ -43,16 +44,13 @@ const BookBox = ({ data }: { data: Book }) => {
     const bookId = data.bookId;
     const startDate = data.startDate.slice(0, 10);
     const endDate = data.endDate.slice(0, 10);
-    const gapTime = new Date(endDate).getTime() - new Date(startDate).getTime();
-    const gapDay = Math.ceil(gapTime / (1000 * 60 * 60 * 24));
-    const countDay = Math.ceil(
-        (new Date().getTime() - new Date(startDate).getTime()) /
-            (1000 * 60 * 60 * 24)
-    );
+    const totalPeriod = moment(endDate).diff(moment(startDate), "days") + 1;
+    const countDay = moment().diff(moment(startDate), "days") + 1;
 
     //일일 권장 독서량
     const leftPage = data.endPageNum - data.startPageNum; //수정 해야함
-    const leftDay = gapDay - countDay;
+    const leftDay = totalPeriod - countDay;
+    // const totalPage = data.endPageNum - data.startPageNum + 1;
     const pagePerDay = Math.ceil(leftPage / leftDay);
 
     const handleUpdateBtn = () => {
@@ -79,7 +77,7 @@ const BookBox = ({ data }: { data: Book }) => {
     return (
         <StyledBookBox>
             <div className="box-top">
-                <p>{`${startDate} ~ ${endDate} (${gapDay}일)`}</p>
+                <p>{`${startDate} ~ ${endDate} (${totalPeriod}일)`}</p>
                 <button onClick={handleUpdateBtn}>수정</button>
                 <BookModal
                     modalIsOpen={modalIsOpen}
@@ -90,7 +88,7 @@ const BookBox = ({ data }: { data: Book }) => {
             </div>
             <div className="main">
                 <div className="chart">
-                    <p>D {leftDay}</p>
+                    <p>{leftDay >= 0 ? 'D-' + leftDay : 'D+' + leftDay }</p>
                     <div>차트 56%</div>
                     <p>120 / {data.endPageNum} p</p>
                 </div>

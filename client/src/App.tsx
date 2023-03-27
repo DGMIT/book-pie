@@ -12,7 +12,7 @@ function App() {
         <Header/>
         <Routes>
           <Route path='/*' element={<BookPage/>}/>
-          <Route path='/report/:id' element={<ReportPage/>}/>
+          <Route path='/report/:bookId' element={<ReportPage/>}/>
         </Routes>
       </div>
     </BrowserRouter>

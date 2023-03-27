@@ -3,7 +3,6 @@ import { FormEvent, useState } from "react";
 import { Book, BookCreateRequest } from "../../models/book.model";
 import moment from "moment";
 import Modal from "react-modal";
-import { time } from "console";
 
 const customModalStyles = {
     content: {
