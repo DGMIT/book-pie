@@ -20,7 +20,8 @@ const customStyles = {
         top: "50%",
         left: "50%",
         transform: "translate(-50%, -50%)",
-        width: "700px"
+        width: "700px",
+        height: "500px"
     },
     overlay: {
         background: "rgba(0, 0, 0, 0.5)"
@@ -45,6 +46,7 @@ const FloatingBtn = () => {
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
                 style={customStyles}
+                ariaHideApp={false}
             >
                 <BookModal closeModal={closeModal}/>
             </Modal>
