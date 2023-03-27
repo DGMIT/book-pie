@@ -1,5 +1,5 @@
 import axios from "axios";
-import { ChangeEvent, FormEvent, MouseEventHandler, useState } from "react";
+import { ChangeEvent, EventHandler, FormEvent, MouseEventHandler, SetStateAction, useState } from "react";
 import { BookCreateRequest } from "../../models/book.model";
 import { type } from "os";
 import moment from "moment";
@@ -14,7 +14,12 @@ export interface FormValue {
     endDate: string;
 }
 
-const BookModal = ({ closeModal }: { closeModal: MouseEventHandler }) => {
+interface Props {
+    setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+
+const BookModal = ({ setModalIsOpen }: Props) => {
     const [isError, setIsError] = useState(false);
     const [startPageNum, setStartPageNum] = useState(1);
     const [endPageNum, setEndPageNum] = useState(2);
@@ -52,7 +57,8 @@ const BookModal = ({ closeModal }: { closeModal: MouseEventHandler }) => {
     const handleFetch = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        if(!validatePageInput() || !validateDateInput()) return false;
+        if(!validatePageInput() || !validateDateInput()) return;
+
         const formData = new FormData(e.currentTarget);
 
         const title = String(formData.get('title'));
@@ -81,17 +87,19 @@ const BookModal = ({ closeModal }: { closeModal: MouseEventHandler }) => {
 
         // console.log(body);
 
-        // axios
-        //     .post("http://localhost:4000/book", body)
-        //     .then((response) => {
-        //         const data = response.data;
-        //         if(data.result === 'OK') {
-        //             setIsError(false);
-        //         }
-        //     })
-        //     .catch((error) => {
-        //         setIsError(true);
-        //     });
+        axios
+            .post("http://localhost:4000/book", body)
+            .then((response) => {
+                const data = response.data;
+                if(data.result === 'OK') {
+                    setIsError(false);
+                    alert('도서 등록이 완료되었습니다.');
+                    setModalIsOpen(false);
+                }
+            })
+            .catch((error) => {
+                setIsError(true);
+            });
     };
 
     return (
@@ -186,7 +194,7 @@ const BookModal = ({ closeModal }: { closeModal: MouseEventHandler }) => {
                         <span>총 페이지 / 기간 = {totalPage} p / {totalPeriod} 일 = {Math.ceil(totalPage / totalPeriod)} p (반올림)</span>
                     </div>
                 </div>
-                <button type="reset" onClick={closeModal}>
+                <button type="reset" onClick={() => setModalIsOpen(false)}>
                     닫기
                 </button>
                 <button type="submit">등록</button>
