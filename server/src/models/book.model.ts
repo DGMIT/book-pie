@@ -22,6 +22,11 @@ export interface BookListResponse extends Response{
     bookList: Book[]
 }
 
+export interface BookResponse extends Response{
+    result: 'OK',
+    bookData: Book;
+}
+
 export interface BookCreateRequest {
     title: string,
     author?: string,

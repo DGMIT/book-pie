@@ -24,19 +24,19 @@ export class BookController implements interfaces.Controller {
         }
     }
     
-    // @httpGet("/:id")
-    // private async getById(@requestParam("id") id: number, @response() res: express.Response) {
-    //     try {
-    //         const book: Book = await this.bookService.getById(id);
-    //         if (!book) {
-    //             res.sendStatus(404);
-    //         } else {
-    //             res.status(200).json(book);
-    //         }
-    //     } catch (err) {
-    //         res.status(500).json({ err});
-    //     }
-    // }
+    @httpGet("/:id")
+    private async getById(@requestParam("id") id: number, @response() res: express.Response) {
+        try {
+            const data = await this.bookService.getById(id);
+            if (data.result === 'OK') {
+                res.status(200).json(data);
+            } else {
+                res.status(404).json(data);
+            }
+        } catch (err) {
+            res.status(500).json({err});
+        }
+    }
 
     @httpPost("/")
     private async create(@request() req: express.Request, @response() res: express.Response) {
@@ -48,7 +48,7 @@ export class BookController implements interfaces.Controller {
                 res.status(404).json(data);
             }
         } catch (err) {
-            res.status(500).json({ error: err.message });
+            res.status(500).json({ err });
         }
     }
 
@@ -62,7 +62,7 @@ export class BookController implements interfaces.Controller {
                 res.status(404).json(data);
             }
         } catch (err) {
-            res.status(500).json({ error: err.message });
+            res.status(500).json({ err });
         }
     }
 
@@ -76,7 +76,7 @@ export class BookController implements interfaces.Controller {
                 res.status(404).json(data);
             }
         } catch (err) {
-            res.status(500).json({ error: err.message });
+            res.status(500).json({err});
         }
     }
 }

@@ -1,7 +1,7 @@
 import { injectable, inject } from "inversify";
 import TYPES from "../constant/types";
 import * as mysql from "mysql2/promise";
-import { Response, BookListResponse, BookCreateRequest } from "../models/book.model";
+import { Response, BookListResponse, BookCreateRequest, BookResponse } from "../models/book.model";
 import { Book } from "../models/book.model";
 import { DBexecute } from "./dbExecute.service";
 
@@ -56,6 +56,52 @@ export class BookService {
         }
         return result;
     }
+    async getById(id): Promise<Response | BookListResponse> {
+        const queryStr = 
+        `SELECT
+            BP_BOOK_ID as 'bookId',
+            BP_BOOK_TITLE as 'title',
+            BP_BOOK_AUTHOR as 'author',
+            BP_BOOK_PUBLISHER as 'publisher',
+            BP_BOOK_START_NUM as 'startPageNum',
+            BP_BOOK_END_NUM as 'endPageNum',
+            BP_BOOK_START_DT as 'startDate',
+            BP_BOOK_END_DT as 'endDate',
+            BP_BOOK_WEEKEND_INC_YN as 'weekendIncludeYN',
+            WRT_DTHMS as 'writtenDatetime',
+            UPDATE_DTHMS as 'updateDatetime'
+        FROM 
+            BP_BOOK
+        WHERE
+            DEL_YN = 'N' AND BP_BOOK_ID='${id}'
+        ;`;
+
+        
+        let result: Response | BookResponse;
+        try{
+            let queryResult = await this.dbExecute.execute(queryStr);
+            const [row, column] = queryResult;
+            
+            if(!row || !Array.isArray(row) || !row.length) {
+                result = {
+                    result: 'HAVE_NO_DATA'
+                }
+            } else {
+                result = {
+                    result: 'OK',
+                    bookData: row[0] as Book
+                }
+            }
+            
+        } catch {
+            result = {
+                result: 'ERROR'
+            }
+        }
+        return result;
+    }
+
+
 
     async create(reqBody: BookCreateRequest): Promise<Response> {
         const {
@@ -125,7 +171,8 @@ export class BookService {
             BP_BOOK_START_NUM='${startPageNum}',
             BP_BOOK_END_NUM='${endPageNum}',
             BP_BOOK_START_DT='${startDate}',
-            BP_BOOK_END_DT='${endDate}'
+            BP_BOOK_END_DT='${endDate}',
+            UPDATE_DTHMS=CURRENT_TIMESTAMP()
         WHERE
             BP_BOOK_ID='${id}';`;
 
