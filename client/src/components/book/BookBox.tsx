@@ -59,7 +59,7 @@ const BookBox = ({data}: {data: Book}) => {
                 </div>
                 <div className="contents">
                     <h2>{data.title}</h2>
-                    <p>{data.author} | {data.publisher}</p>
+                    <p>{`${data.author ? data.author : ''}${data.author && data.publisher ? ' | ' :''}${data.publisher ? data.publisher : ''}`}</p>
                     <div>
                         <p>{countDay}일차</p>
                         <div>
