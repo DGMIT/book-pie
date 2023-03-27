@@ -4,6 +4,7 @@ import { Book } from "../../models/book.model";
 import axios from "axios";
 import { useState } from "react";
 import BookModal from "./BookModal";
+import { useLocation } from 'react-router-dom';
 
 const StyledBookBox = styled.div`
     border: 1px solid #ddd;
@@ -35,6 +36,7 @@ const StyledBookBox = styled.div`
 `;
 
 const BookBox = ({ data }: { data: Book }) => {
+    const location = useLocation();
     const [isError, setIsError] = useState<boolean>(false);
     const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
 
@@ -60,14 +62,12 @@ const BookBox = ({ data }: { data: Book }) => {
     const handleDeleteBtn = () => {
         if (window.confirm("도서를 삭제하시겠습니까?")) {
             axios
-                .delete("http://localhost:4000/book/" + bookId)
+                .put("http://localhost:4000/book/delete/" + bookId)
                 .then((response) => {
                     const data = response.data;
-                    if (data.result === "OK") {
-                        setIsError(false);
-                    }
-
+                    setIsError(false);
                     alert("도서가 삭제되었습니다.");
+                    window.location.reload();
                     window.location.replace("/");
                 })
                 .catch((error) => {
@@ -112,11 +112,12 @@ const BookBox = ({ data }: { data: Book }) => {
                                 {leftDay}일
                             </p>
                         </div>
+                        {location.pathname.indexOf('/report') === -1 ?
                         <div className="button-box">
                             <button>
-                                <Link to="/report/1">독서하기</Link>
+                                <Link to={"/report/" + bookId}>독서하기</Link>
                             </button>
-                        </div>
+                        </div> : null}
                     </div>
                 </div>
             </div>

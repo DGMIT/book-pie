@@ -145,11 +145,12 @@ export class BookService {
 
     async delete(id): Promise<Response> {        
         const queryStr = 
-        `DELETE FROM
+        `UPDATE
             BP_BOOK
+        SET
+            DEL_YN='Y'
         WHERE
             BP_BOOK_ID='${id}';`;
-
         let result: Response;
         try {
             let queryResult = await this.dbExecute.execute(queryStr);
