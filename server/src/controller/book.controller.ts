@@ -14,7 +14,11 @@ export class BookController implements interfaces.Controller {
     async getList(@response() res: express.Response) {
         try{
             const data = await this.bookService.getList();
-            res.status(200).json(data);
+            if (data.result === 'OK' || data.result === 'HAVE_NO_DATA') {
+                res.status(200).json(data);
+            } else {
+                res.sendStatus(404);
+            }
         }catch(err) {
             res.status(500).json(err);
         }
@@ -38,7 +42,11 @@ export class BookController implements interfaces.Controller {
     private async create(@request() req: express.Request, @response() res: express.Response) {
         try {
             const data = await this.bookService.create(req.body);
-            res.status(201).json(data);
+            if (data.result === 'OK') {
+                res.status(201).json(data);
+            } else {
+                res.sendStatus(404);
+            }
         } catch (err) {
             res.status(500).json({ error: err.message });
         }
@@ -48,30 +56,27 @@ export class BookController implements interfaces.Controller {
     private async update(@requestParam("id") id: string, @request() req: express.Request, @response() res: express.Response) {
         try {
             const data = await this.bookService.update(id, req.body);
-            if (!data) {
-                res.sendStatus(404);
-            } else {
+            if (data.result === 'OK') {
                 res.status(200).json(data);
+            } else {
+                res.sendStatus(404);
             }
         } catch (err) {
             res.status(500).json({ error: err.message });
         }
     }
-
-    /*
 
     @httpDelete("/:id")
     private async delete(@requestParam("id") id: string, @response() res: express.Response) {
         try {
-            const deletedBook: Book = await this.bookService.delete(id);
-            if (!deletedBook) {
-                res.sendStatus(404);
-            } else {
+            const data = await this.bookService.delete(id);
+            if (data.result === 'OK') {
                 res.sendStatus(204);
+            } else {
+                res.sendStatus(404);
             }
         } catch (err) {
             res.status(500).json({ error: err.message });
         }
     }
-    */
 }

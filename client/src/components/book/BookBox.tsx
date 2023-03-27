@@ -34,7 +34,7 @@ const StyledBookBox = styled.div`
     }
 `;
 
-const BookBox = ({data}: {data: Book}) => {
+const BookBox = ({ data }: { data: Book }) => {
     const [isError, setIsError] = useState<boolean>(false);
     const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
 
@@ -43,7 +43,10 @@ const BookBox = ({data}: {data: Book}) => {
     const endDate = data.endDate.slice(0, 10);
     const gapTime = new Date(endDate).getTime() - new Date(startDate).getTime();
     const gapDay = Math.ceil(gapTime / (1000 * 60 * 60 * 24));
-    const countDay = Math.ceil((new Date().getTime() - new Date(startDate).getTime()) / (1000 * 60 * 60 * 24));
+    const countDay = Math.ceil(
+        (new Date().getTime() - new Date(startDate).getTime()) /
+            (1000 * 60 * 60 * 24)
+    );
 
     //일일 권장 독서량
     const leftPage = data.endPageNum - data.startPageNum; //수정 해야함
@@ -52,30 +55,37 @@ const BookBox = ({data}: {data: Book}) => {
 
     const handleUpdateBtn = () => {
         setModalIsOpen(true);
-    }
+    };
 
     const handleDeleteBtn = () => {
-        axios
-            .delete("http://localhost:4000/book" + bookId)
-            .then((response) => {
-                const data = response.data;
-                if(data.result === 'OK') {
-                    setIsError(false);
-                }
-            })
-            .catch((error) => {
-                setIsError(true);
-                alert('삭제되었습니다.');
-            });
-        }
+        if (window.confirm("도서를 삭제하시겠습니까?")) {
+            axios
+                .delete("http://localhost:4000/book/" + bookId)
+                .then((response) => {
+                    const data = response.data;
+                    if (data.result === "OK") {
+                        setIsError(false);
+                    }
 
+                    alert("도서가 삭제되었습니다.");
+                    window.location.replace("/");
+                })
+                .catch((error) => {
+                    setIsError(true);
+                });
+        }
+    };
 
     return (
         <StyledBookBox>
             <div className="box-top">
                 <p>{`${startDate} ~ ${endDate} (${gapDay}일)`}</p>
                 <button onClick={handleUpdateBtn}>수정</button>
-                <BookModal modalIsOpen={modalIsOpen} setModalIsOpen={setModalIsOpen} data={data}/>
+                <BookModal
+                    modalIsOpen={modalIsOpen}
+                    setModalIsOpen={setModalIsOpen}
+                    data={data}
+                />
                 <button onClick={handleDeleteBtn}>삭제</button>
             </div>
             <div className="main">
@@ -86,7 +96,9 @@ const BookBox = ({data}: {data: Book}) => {
                 </div>
                 <div className="contents">
                     <h2>{data.title}</h2>
-                    <p>{`${data.author ? data.author : ''}${data.author && data.publisher ? ' | ' :''}${data.publisher ? data.publisher : ''}`}</p>
+                    <p>{`${data.author ? data.author : ""}${
+                        data.author && data.publisher ? " | " : ""
+                    }${data.publisher ? data.publisher : ""}`}</p>
                     <div>
                         <p>{countDay}일차</p>
                         <div>
@@ -94,17 +106,22 @@ const BookBox = ({data}: {data: Book}) => {
                             <p>✅ 성공 18일  ❌ 실패 3일</p> */}
                         </div>
                         <div>
-                            <p>일일 권장 독서량   {pagePerDay}p</p>
-                            <p>남은 페이지 / 남은 일수 =  {leftPage}p / {leftDay}일</p>
+                            <p>일일 권장 독서량 {pagePerDay}p</p>
+                            <p>
+                                남은 페이지 / 남은 일수 = {leftPage}p /{" "}
+                                {leftDay}일
+                            </p>
                         </div>
                         <div className="button-box">
-                            <button><Link to='/report/1'>독서하기</Link></button>
+                            <button>
+                                <Link to="/report/1">독서하기</Link>
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
         </StyledBookBox>
-    )
-}
+    );
+};
 
 export default BookBox;

@@ -142,5 +142,26 @@ export class BookService {
         }
         return result;
     }
+
+    async delete(id): Promise<Response> {        
+        const queryStr = 
+        `DELETE FROM
+            BP_BOOK
+        WHERE
+            BP_BOOK_ID='${id}';`;
+
+        let result: Response;
+        try {
+            let queryResult = await this.dbExecute.execute(queryStr);
+            result = {
+                result: 'OK'
+            }
+        } catch {
+            result = {
+                result: 'ERROR'
+            }
+        }
+        return result;
+    }
     
 }
