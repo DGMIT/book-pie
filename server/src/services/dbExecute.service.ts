@@ -5,23 +5,27 @@ import * as mysql from "mysql2/promise";
 @injectable()
 export class DBexecute {
     async execute(queryStr: string) {
-        // 데이터베이스 연결 설정
-        const connection = await mysql.createConnection({
-            host: "localhost",
-            user: "root",
-            password: "localmysql1234",
-            database: "BOOK_PIE",
-        });
+        try {
+            // 데이터베이스 연결 설정
+            const connection = await mysql.createConnection({
+                host: "localhost",
+                user: "root",
+                password: "localmysql1234",
+                database: "BOOK_PIE",
+            });
 
-        // 데이터베이스 연결
-        await connection.connect();
+            // 데이터베이스 연결
+            await connection.connect();
 
-        // 데이터베이스 쿼리 실행
-        let queryResult = await connection.query(queryStr);
+            // 데이터베이스 쿼리 실행
+            let queryResult = await connection.query(queryStr);
 
-        // 데이터베이스 연결 종료
-        connection.end();
+            // 데이터베이스 연결 종료
+            connection.end();
 
-        return queryResult;
+            return queryResult;
+        } catch (err) {
+            throw new Error(err.message);
+        }
     }
 }
