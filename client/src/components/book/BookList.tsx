@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 
 const BookList = () => {
     const [bookList, setBookList] = useState([]);
+    const [isError, setIsError] = useState(false);
+    
     const handleFetch = () => {
         axios
             .get("http://localhost:4000/book")
@@ -11,10 +13,11 @@ const BookList = () => {
                 const data = response.data;
                 if(data.result === 'OK') {
                     setBookList(data.bookList);
+                    setIsError(false);
                 }
             })
             .catch((error) => {
-                console.error(error);
+                setIsError(true);
             });
     };
 
