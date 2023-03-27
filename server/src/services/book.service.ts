@@ -30,35 +30,34 @@ export class BookService {
         WHERE
             DEL_YN = 'N'
         ORDER BY 
-            id DESC;`;
+            BP_BOOK_ID DESC;`;
 
-        let queryResult = await this.dbExecute.execute(queryStr);
-
-        const [row, column] = queryResult;
-        // console.log(row);
-
+        
         let result: Response | BookListResponse;
-        if(!row || !Array.isArray(row) || !row.length) {
-            result = {
-                result: 'HAVE_NO_DATA'
+        try{
+            let queryResult = await this.dbExecute.execute(queryStr);
+            const [row, column] = queryResult;
+            // console.log(row);
+            if(!row || !Array.isArray(row) || !row.length) {
+                result = {
+                    result: 'HAVE_NO_DATA'
+                }
+            } else {
+                result = {
+                    result: 'OK',
+                    totalCount: row.length,
+                    bookList: row as Book[]
+                }
             }
-        } else {
+        } catch {
             result = {
-                result: 'OK',
-                totalCount: row.length,
-                bookList: row as Book[]
+                result: 'ERROR'
             }
         }
         return result;
     }
 
-    // async getById(id: number): Promise<Book> {
-
-    // }
-
     async create(reqBody: BookCreateRequest): Promise<Response> {
-        
-        // console.log(reqBody);
         const {
             title,
             author,
@@ -90,16 +89,58 @@ export class BookService {
             '${startDate}',
             '${endDate}'
         );`;
-        let queryResult = await this.dbExecute.execute(queryStr);
-
-        console.log(queryResult);
 
         let result: Response;
-
-        result = {
-            result: 'OK'
+        try {
+            let queryResult = await this.dbExecute.execute(queryStr);
+            result = {
+                result: 'OK'
+            }
+        } catch {
+            result = {
+                result: 'ERROR'
+            }
         }
-        
         return result;
     }
+
+    async update(id, reqBody: BookCreateRequest): Promise<Response> {
+        const {
+            title,
+            author,
+            publisher,
+            startPageNum,
+            endPageNum,
+            startDate,
+            endDate
+        } = reqBody;
+        
+        const queryStr = 
+        `UPDATE
+            BP_BOOK
+        SET
+            BP_BOOK_TITLE='${title}',
+            ${author ? `BP_BOOK_AUTHOR='${author}',` : ''}
+            ${publisher ? `BP_BOOK_PUBLISHER='${publisher}',` : ''}
+            BP_BOOK_START_NUM='${startPageNum}',
+            BP_BOOK_END_NUM='${endPageNum}',
+            BP_BOOK_START_DT='${startDate}',
+            BP_BOOK_END_DT='${endDate}'
+        WHERE
+            BP_BOOK_ID='${id}';`;
+
+        let result: Response;
+        try {
+            let queryResult = await this.dbExecute.execute(queryStr);
+            result = {
+                result: 'OK'
+            }
+        } catch {
+            result = {
+                result: 'ERROR'
+            }
+        }
+        return result;
+    }
+    
 }

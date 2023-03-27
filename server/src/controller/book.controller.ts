@@ -44,21 +44,21 @@ export class BookController implements interfaces.Controller {
         }
     }
 
-    /*
-
     @httpPut("/:id")
     private async update(@requestParam("id") id: string, @request() req: express.Request, @response() res: express.Response) {
         try {
-            const updatedBook: Book = await this.bookService.update(id, req.body);
-            if (!updatedBook) {
+            const data = await this.bookService.update(id, req.body);
+            if (!data) {
                 res.sendStatus(404);
             } else {
-                res.status(200).json(updatedBook);
+                res.status(200).json(data);
             }
         } catch (err) {
             res.status(500).json({ error: err.message });
         }
     }
+
+    /*
 
     @httpDelete("/:id")
     private async delete(@requestParam("id") id: string, @response() res: express.Response) {

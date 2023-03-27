@@ -7,7 +7,7 @@ export interface Book {
     endPageNum: number,
     startDate: string,
     endDate: string,
-    weekendIncludeYN: 'Y' | 'N',
+    // weekendIncludeYN: 'Y' | 'N',
     writtenDatetime: null | string,
     updateDatetime: null | string
 }
