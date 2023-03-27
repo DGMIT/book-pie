@@ -1,8 +1,22 @@
 import axios from "axios";
 import { FormEvent, useState } from "react";
-import { BookCreateRequest } from "../../models/book.model";
+import { Book, BookCreateRequest } from "../../models/book.model";
 import moment from "moment";
+import Modal from "react-modal";
+import { time } from "console";
 
+const customModalStyles = {
+    content: {
+        top: "50%",
+        left: "50%",
+        transform: "translate(-50%, -50%)",
+        width: "700px",
+        height: "400px",
+    },
+    overlay: {
+        background: "rgba(0, 0, 0, 0.5)"
+    }
+};
 export interface FormValue {
     title: string;
     author?: string;
@@ -14,17 +28,19 @@ export interface FormValue {
 }
 
 interface Props {
+    modalIsOpen: boolean;
     setModalIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    data?: Book
 }
 
 
-const BookModal = ({ setModalIsOpen }: Props) => {
-    const [isError, setIsError] = useState(false);
-    const [startPageNum, setStartPageNum] = useState(1);
-    const [endPageNum, setEndPageNum] = useState(2);
+const BookModal = ({ modalIsOpen, setModalIsOpen, data }: Props) => {
+    const [isError, setIsError] = useState<boolean>(false);
+    const [startPageNum, setStartPageNum] = useState(data?.startPageNum || 1);
+    const [endPageNum, setEndPageNum] = useState(data?.endPageNum || 2);
     const [pageErrMsgShow, setPageErrMsgShow] = useState(false);
-    const [startDate, setStartDate] = useState(moment().format("yyyy-MM-DD"));
-    const [endDate, setEndDate] = useState(moment().add(1, "months").format("yyyy-MM-DD"));
+    const [startDate, setStartDate] = useState(data?.startDate ? data.startDate.slice(0, 10) : moment().format("yyyy-MM-DD"));
+    const [endDate, setEndDate] = useState(data?.endDate ? data.endDate.slice(0, 10) : moment().add(1, "months").format("yyyy-MM-DD"));
     const [dateErrMsgShow, setDateErrMsgShow] = useState(false);
     const totalPage = endPageNum - startPageNum + 1;
     const totalPeriod = moment(endDate).diff(moment(startDate), "days") + 1;
@@ -84,9 +100,9 @@ const BookModal = ({ setModalIsOpen }: Props) => {
             body.publisher = publisher;
         } 
 
-        // console.log(body);
-
-        axios
+        //create
+        if(!data) {
+            axios
             .post("http://localhost:4000/book", body)
             .then((response) => {
                 const data = response.data;
@@ -94,15 +110,37 @@ const BookModal = ({ setModalIsOpen }: Props) => {
                     setIsError(false);
                     alert('도서 등록이 완료되었습니다.');
                     setModalIsOpen(false);
+                    window.location.replace('/');
                 }
             })
             .catch((error) => {
                 setIsError(true);
             });
+        } else { //update
+            axios
+            .put("http://localhost:4000/book/" + data.bookId, body)
+            .then((response) => {
+                const data = response.data;
+                if(data.result === 'OK') {
+                    setIsError(false);
+                    alert('도서 수정이 완료되었습니다.');
+                    setModalIsOpen(false);
+                    window.location.replace('/');
+                }
+            })
+            .catch((error) => {
+                setIsError(true);
+            });
+        }
     };
 
     return (
-        <div>
+        <Modal
+            isOpen={modalIsOpen}
+            onRequestClose={() => setModalIsOpen(false)}
+            style={customModalStyles}
+            ariaHideApp={false}
+        >
             <h2>책 등록하기</h2>
             <form onSubmit={handleFetch}>
                 <div>
@@ -113,6 +151,7 @@ const BookModal = ({ setModalIsOpen }: Props) => {
                         required
                         minLength={1}
                         maxLength={200}
+                        defaultValue={data ? data.title : ''}
                     />
                 </div>
                 <div>
@@ -122,6 +161,7 @@ const BookModal = ({ setModalIsOpen }: Props) => {
                         name="author"
                         minLength={1}
                         maxLength={100}
+                        defaultValue={data ? data.author : ''}
                     />
                 </div>
                 <div>
@@ -131,6 +171,7 @@ const BookModal = ({ setModalIsOpen }: Props) => {
                         name="publisher"
                         minLength={1}
                         maxLength={100}
+                        defaultValue={data ? data.publisher : ''}
                     />
                 </div>
                 <div>
@@ -194,11 +235,11 @@ const BookModal = ({ setModalIsOpen }: Props) => {
                     </div>
                 </div>
                 <button type="reset" onClick={() => setModalIsOpen(false)}>
-                    닫기
+                    취소
                 </button>
-                <button type="submit">등록</button>
+                <button type="submit">{data ? '수정' : '등록'}</button>
             </form>
-        </div>
+            </Modal>
     );
 };
 

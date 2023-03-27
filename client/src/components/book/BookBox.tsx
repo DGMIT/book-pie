@@ -1,6 +1,9 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { Book } from "../../models/book.model";
+import axios from "axios";
+import { useState } from "react";
+import BookModal from "./BookModal";
 
 const StyledBookBox = styled.div`
     border: 1px solid #ddd;
@@ -32,6 +35,10 @@ const StyledBookBox = styled.div`
 `;
 
 const BookBox = ({data}: {data: Book}) => {
+    const [isError, setIsError] = useState<boolean>(false);
+    const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
+
+    const bookId = data.bookId;
     const startDate = data.startDate.slice(0, 10);
     const endDate = data.endDate.slice(0, 10);
     const gapTime = new Date(endDate).getTime() - new Date(startDate).getTime();
@@ -43,13 +50,33 @@ const BookBox = ({data}: {data: Book}) => {
     const leftDay = gapDay - countDay;
     const pagePerDay = Math.ceil(leftPage / leftDay);
 
+    const handleUpdateBtn = () => {
+        setModalIsOpen(true);
+    }
+
+    const handleDeleteBtn = () => {
+        axios
+            .delete("http://localhost:4000/book" + bookId)
+            .then((response) => {
+                const data = response.data;
+                if(data.result === 'OK') {
+                    setIsError(false);
+                }
+            })
+            .catch((error) => {
+                setIsError(true);
+                alert('삭제되었습니다.');
+            });
+        }
+
 
     return (
         <StyledBookBox>
             <div className="box-top">
                 <p>{`${startDate} ~ ${endDate} (${gapDay}일)`}</p>
-                <button>수정</button>
-                <button>삭제</button>
+                <button onClick={handleUpdateBtn}>수정</button>
+                <BookModal modalIsOpen={modalIsOpen} setModalIsOpen={setModalIsOpen} data={data}/>
+                <button onClick={handleDeleteBtn}>삭제</button>
             </div>
             <div className="main">
                 <div className="chart">

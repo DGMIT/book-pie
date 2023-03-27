@@ -1,10 +1,11 @@
 import BookBox from "./BookBox";
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { Book } from "../../models/book.model";
 
 const BookList = () => {
-    const [bookList, setBookList] = useState([]);
-    const [isError, setIsError] = useState(false);
+    const [bookList, setBookList] = useState<Book[]>();
+    const [isError, setIsError] = useState<boolean>(false);
     
     const handleFetch = () => {
         axios
@@ -26,8 +27,8 @@ const BookList = () => {
     }, []);
     return (
         <ul>
-            {bookList.map((data, idx) => (
-                <li key={idx}>
+            {bookList && bookList.map((data: Book) => (
+                <li key={data.bookId}>
                     <BookBox data={data}/>
                 </li>
             ))}
