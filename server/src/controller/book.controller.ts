@@ -17,7 +17,7 @@ export class BookController implements interfaces.Controller {
             if (data.result === 'OK' || data.result === 'HAVE_NO_DATA') {
                 res.status(200).json(data);
             } else {
-                res.sendStatus(404).json(data);
+                res.status(404).json(data);
             }
         }catch(err) {
             res.status(500).json(err);
@@ -45,7 +45,7 @@ export class BookController implements interfaces.Controller {
             if (data.result === 'OK') {
                 res.status(201).json(data);
             } else {
-                res.sendStatus(404).json(data);
+                res.status(404).json(data);
             }
         } catch (err) {
             res.status(500).json({ error: err.message });
@@ -59,7 +59,7 @@ export class BookController implements interfaces.Controller {
             if (data.result === 'OK') {
                 res.status(200).json(data);
             } else {
-                res.sendStatus(404).json(data);
+                res.status(404).json(data);
             }
         } catch (err) {
             res.status(500).json({ error: err.message });
@@ -73,7 +73,7 @@ export class BookController implements interfaces.Controller {
             if (data.result === 'OK') {
                 res.status(204).json(data);
             } else {
-                res.sendStatus(404).json(data);
+                res.status(404).json(data);
             }
         } catch (err) {
             res.status(500).json({ error: err.message });
