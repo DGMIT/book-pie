@@ -11,7 +11,7 @@ const ReportPage = () => {
     const [isError, setIsError] = useState<boolean>(false);
     const [bookData, setBookData] = useState<Book>();
 
-    console.log(bookData);
+    //도서 데이터 가져오기
     const handleFetch = () => {
         axios
             .get("http://localhost:4000/book/" + bookId)
@@ -36,7 +36,7 @@ const ReportPage = () => {
             {bookData &&
                 <>
                 <BookBox data={bookData} />
-                <ReportList />
+                {bookId && <ReportList bookId={bookId}/>}
                 </>
             }
         </>
