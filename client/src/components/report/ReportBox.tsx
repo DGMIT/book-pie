@@ -47,7 +47,7 @@ const ReportBox = ({ data }: Props) => {
     return (
         <StyledReportBox>
             <div className="box-top">
-                {!isEditMode && <button>수정</button>}
+                {!isEditMode && <button onClick={() => setIsEditMode(true)}>수정</button>}
                 <button>삭제</button>
             </div>
             <div className="main">
@@ -91,7 +91,8 @@ const ReportBox = ({ data }: Props) => {
                 </div>
             </div>
             <div className="button-box">
-                {isEditMode && <button>등록하기</button>}
+                {!data && <button>등록하기</button>}
+                {isEditMode && data && <button onClick={() => setIsEditMode(false)}>수정 완료</button>}
             </div>
         </StyledReportBox>
     );
