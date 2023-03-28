@@ -5,19 +5,21 @@ import {ReportService} from "../services/report.service";
 import TYPES from "../constant/types";
 
 @controller("/report")
-export class BookController implements interfaces.Controller {
+export class ReportController implements interfaces.Controller {
 
-    constructor( @inject(TYPES.ReportService) private reportService: ReportService ) {}
+    constructor( @inject(TYPES.ReportService) private reportService: ReportService) {}
 
     @httpGet("/")
     async getList(@response() res: express.Response) {
         try{
+            console.log('dddfsdfa');
             const data = await this.reportService.getList();
             if (data.result === 'OK' || data.result === 'HAVE_NO_DATA') {
                 res.status(200).json(data);
             } else {
                 res.status(404).json(data);
             }
+            res.sendStatus(203);
         }catch(err) {
             res.status(500).json(err);
         }
