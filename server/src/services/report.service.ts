@@ -9,7 +9,7 @@ export class ReportService {
     constructor(
         @inject(TYPES.DBexecute) private dbExecute: DBexecute
     ) {}
-    async getList(): Promise<Response | ReportListResponse> {
+    async getList(bookId): Promise<Response | ReportListResponse> {
         const queryStr = 
         `SELECT
             BP_BR_ID as 'bookReportId',
@@ -21,7 +21,7 @@ export class ReportService {
         FROM 
             BP_BOOK_REPORT
         WHERE
-            DEL_YN = 'N'
+            BP_BOOK_ID = '${bookId}' AND DEL_YN = 'N'
         ORDER BY 
             BP_BR_ID DESC;`;
         
