@@ -1,5 +1,7 @@
 import styled from "styled-components";
-import moment from "moment";
+import { Report } from "../../models/report.model";
+import { useState } from "react";
+import { getDate } from "../../js/getDate";
 
 const StyledReportBox = styled.div`
     border: 1px solid #ddd;
@@ -34,46 +36,62 @@ const StyledReportBox = styled.div`
     }
 `;
 
-type Mode = {
-    mode: "edit" | "readonly";
-};
+interface Props {
+    data?: Report;
+}
 
-const ReportBox = ({ mode }: Mode) => {
+const ReportBox = ({ data }: Props) => {
+    const [isEditMode, setIsEditMode] = useState(!data ? true : false);
+    const [lastReadPage, setLastReadPage] = useState<number>(1);
+    const [contentText, setContentText] = useState<string>("");
     return (
         <StyledReportBox>
             <div className="box-top">
-                {mode !== 'edit' && <button>수정</button>}
+                {!isEditMode && <button>수정</button>}
                 <button>삭제</button>
             </div>
             <div className="main">
-                <p>2023.02.23 (목)</p>
+                {data ? (
+                    <p>{getDate(data.writtenDatetime)}</p>
+                ) : (
+                    <p>{getDate()} 오늘</p>
+                )}
                 <div className="page">
-                    {mode === "edit" ? (
-                        <input value={123} required min={1} />
+                    {isEditMode ? (
+                        <input
+                            value={lastReadPage}
+                            required
+                            min={1}
+                            onChange={(e) =>
+                                setLastReadPage(Number(e.target.value))
+                            }
+                        />
                     ) : (
-                        <span>123</span>
+                        <span>{data?.lastReadPageNum}</span>
                     )}
-                    <span> p 까지 완료 &#40;읽은 쪽수: 0p&#41;</span>
+                    <span> p 까지 완료</span>
                 </div>
                 <div className="text">
-                    {mode === "edit" ? (
+                    {isEditMode ? (
+                        <>
                         <textarea
                             required
                             minLength={10}
                             maxLength={500}
                             rows={5}
-                            value="타입스트립트의 기본 개념과 사용하면 좋은 점에 대해서 알게 되었다."
-                        />
+                            value={contentText}
+                            onChange={(e) => setContentText(e.target.value)}
+                            />
+                        <span>{contentText.length + ' / 500'}</span>
+                        </>
+                        
                     ) : (
-                        <p>
-                            타입스트립트의 기본 개념과 사용하면 좋은 점에 대해서
-                            알게 되었다.
-                        </p>
+                        <p>{data?.contentText}</p>
                     )}
                 </div>
             </div>
             <div className="button-box">
-                {mode === "edit" && <button>등록하기</button>}
+                {isEditMode && <button>등록하기</button>}
             </div>
         </StyledReportBox>
     );
