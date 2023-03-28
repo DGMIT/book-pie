@@ -140,7 +140,7 @@ const BookModal = ({ modalIsOpen, setModalIsOpen, data }: Props) => {
             style={customModalStyles}
             ariaHideApp={false}
         >
-            <h2>책 등록하기</h2>
+            <h2>책 {data ? '수정하기' : '등록하기'}</h2>
             <form onSubmit={handleFetch}>
                 <div>
                     <label htmlFor="book-title">책 제목*</label>
