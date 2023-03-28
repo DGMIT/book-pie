@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { Report } from "../../models/report.model";
 import { useState } from "react";
-import { getDate } from "../../js/getDate";
+import { getDate } from "../../common/getDate";
 
 const StyledReportBox = styled.div`
     border: 1px solid #ddd;
