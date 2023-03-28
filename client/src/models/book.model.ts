@@ -7,8 +7,7 @@ export interface Book {
     endPageNum: number,
     startDate: string,
     endDate: string,
-    // weekendIncludeYN: 'Y' | 'N',
-    writtenDatetime: null | string,
+    writtenDatetime: string,
     updateDatetime: null | string
 }
 
@@ -22,6 +21,11 @@ export interface BookListResponse extends Response{
     bookList: Book[]
 }
 
+export interface BookResponse extends Response{
+    result: 'OK',
+    bookData: Book;
+}
+
 export interface BookCreateRequest {
     title: string,
     author?: string,
@@ -30,5 +34,4 @@ export interface BookCreateRequest {
     endPageNum: number,
     startDate: string,
     endDate: string,
-    // weekendIncludeYN: 'Y' | 'N'
 }
