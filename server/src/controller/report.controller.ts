@@ -9,24 +9,23 @@ export class ReportController implements interfaces.Controller {
 
     constructor( @inject(TYPES.ReportService) private reportService: ReportService) {}
 
-    @httpGet("/")
-    async getList(@response() res: express.Response) {
+    @httpGet("/:bookId")
+    async getList(@requestParam("bookId") bookId: number, @response() res: express.Response) {
+        // console.log(bookId);
         try{
-            console.log('dddfsdfa');
             const data = await this.reportService.getList();
             if (data.result === 'OK' || data.result === 'HAVE_NO_DATA') {
                 res.status(200).json(data);
             } else {
                 res.status(404).json(data);
             }
-            res.sendStatus(203);
         }catch(err) {
             res.status(500).json(err);
         }
     }
     
-    @httpGet("/:id")
-    private async getById(@requestParam("id") id: number, @response() res: express.Response) {
+    @httpGet("/:bookId/:id")
+    private async getById(@requestParam("bookId") bookId: number, @requestParam("id") id: number, @response() res: express.Response) {
         try {
             const data = await this.reportService.getById(id);
             if (data.result === 'OK') {
@@ -39,8 +38,8 @@ export class ReportController implements interfaces.Controller {
         }
     }
 
-    @httpPost("/")
-    private async create(@request() req: express.Request, @response() res: express.Response) {
+    @httpPost("/:bookId")
+    private async create(@requestParam("bookId") bookId: number, @request() req: express.Request, @response() res: express.Response) {
         try {
             const data = await this.reportService.create(req.body);
             if (data.result === 'OK') {
@@ -53,8 +52,8 @@ export class ReportController implements interfaces.Controller {
         }
     }
 
-    @httpPut("/:id")
-    private async update(@requestParam("id") id: string, @request() req: express.Request, @response() res: express.Response) {
+    @httpPut("/:bookId/:id")
+    private async update(@requestParam("bookId") bookId: number, @requestParam("id") id: string, @request() req: express.Request, @response() res: express.Response) {
         try {
             const data = await this.reportService.update(id, req.body);
             if (data.result === 'OK') {
@@ -67,8 +66,8 @@ export class ReportController implements interfaces.Controller {
         }
     }
 
-    @httpPut("/delete/:id")
-    private async delete(@requestParam("id") id: string, @response() res: express.Response) {
+    @httpPut("/:bookId/delete/:id")
+    private async delete(@requestParam("bookId") bookId: number, @requestParam("id") id: string, @response() res: express.Response) {
         try {
             const data = await this.reportService.delete(id);
             if (data.result === 'OK') {
