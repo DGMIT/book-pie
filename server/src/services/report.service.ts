@@ -1,36 +1,31 @@
 import { injectable, inject } from "inversify";
 import TYPES from "../constant/types";
-import { Book, Response, BookListResponse, BookCreateRequest, BookResponse } from "../models/book.model";
+import { Report, Response, ReportListResponse, ReportCreateRequest, ReportResponse } from "../models/report.model";
 import { DBexecute } from "./dbExecute.service";
 
 
 @injectable()
-export class BookService {
+export class ReportService {
     constructor(
         @inject(TYPES.DBexecute) private dbExecute: DBexecute
     ) {}
-    async getList(): Promise<Response | BookListResponse> {
+    async getList(): Promise<Response | ReportListResponse> {
         const queryStr = 
         `SELECT
-            BP_BOOK_ID as 'bookId',
-            BP_BOOK_TITLE as 'title',
-            BP_BOOK_AUTHOR as 'author',
-            BP_BOOK_PUBLISHER as 'publisher',
-            BP_BOOK_START_NUM as 'startPageNum',
-            BP_BOOK_END_NUM as 'endPageNum',
-            BP_BOOK_START_DT as 'startDate',
-            BP_BOOK_END_DT as 'endDate',
-            BP_BOOK_WEEKEND_INC_YN as 'weekendIncludeYN',
+            BP_BR_ID as 'bookReportId',
+            BP_BR_LAST_READ_NUM as 'lastReadPageNum',
+            BP_BR_CONTENT_TEXT as 'contentText',
             WRT_DTHMS as 'writtenDatetime',
-            UPDATE_DTHMS as 'updateDatetime'
+            UPDATE_DTHMS as 'updateDatetime',
+            BP_BOOK_ID as 'bookId'
         FROM 
-            BP_BOOK
+            BP_BOOK_REPORT
         WHERE
             DEL_YN = 'N'
         ORDER BY 
-            BP_BOOK_ID DESC;`;
+            BP_BR_ID DESC;`;
         
-        let result: Response | BookListResponse;
+        let result: Response | ReportListResponse;
         try{
             let queryResult = await this.dbExecute.execute(queryStr);
             const [row, column] = queryResult;
@@ -43,7 +38,7 @@ export class BookService {
                 result = {
                     result: 'OK',
                     totalCount: row.length,
-                    bookList: row as Book[]
+                    reportList: row as Report[]
                 }
             }
         } catch {
@@ -53,27 +48,23 @@ export class BookService {
         }
         return result;
     }
-    async getById(id): Promise<Response | BookListResponse> {
+
+    async getById(id): Promise<Response | ReportListResponse> {
         const queryStr = 
         `SELECT
-            BP_BOOK_ID as 'bookId',
-            BP_BOOK_TITLE as 'title',
-            BP_BOOK_AUTHOR as 'author',
-            BP_BOOK_PUBLISHER as 'publisher',
-            BP_BOOK_START_NUM as 'startPageNum',
-            BP_BOOK_END_NUM as 'endPageNum',
-            BP_BOOK_START_DT as 'startDate',
-            BP_BOOK_END_DT as 'endDate',
-            BP_BOOK_WEEKEND_INC_YN as 'weekendIncludeYN',
+            BP_BR_ID as 'bookReportId',
+            BP_BR_LAST_READ_NUM as 'lastReadPageNum',
+            BP_BR_CONTENT_TEXT as 'contentText',
             WRT_DTHMS as 'writtenDatetime',
-            UPDATE_DTHMS as 'updateDatetime'
+            UPDATE_DTHMS as 'updateDatetime',
+            BP_BOOK_ID as 'bookId'
         FROM 
-            BP_BOOK
+            BP_BOOK_REPORT
         WHERE
-            DEL_YN = 'N' AND BP_BOOK_ID='${id}'
+            DEL_YN = 'N' AND BP_BR_ID='${id}'
         ;`;
 
-        let result: Response | BookResponse;
+        let result: Response | ReportResponse;
         try{
             let queryResult = await this.dbExecute.execute(queryStr);
             const [row, column] = queryResult;
@@ -85,7 +76,7 @@ export class BookService {
             } else {
                 result = {
                     result: 'OK',
-                    bookData: row[0] as Book
+                    reportData: row[0] as Report
                 }
             }
             
@@ -99,37 +90,25 @@ export class BookService {
 
 
 
-    async create(reqBody: BookCreateRequest): Promise<Response> {
+    async create(reqBody: ReportCreateRequest): Promise<Response> {
         const {
-            title,
-            author,
-            publisher,
-            startPageNum,
-            endPageNum,
-            startDate,
-            endDate
+            lastReadPageNum,
+            contentText,
+            bookId,
         } = reqBody;
-        
+
         const queryStr = 
-        `INSERT INTO BP_BOOK
+        `INSERT INTO BP_BOOK_REPORT
         (
-            BP_BOOK_TITLE,
-            ${author ? 'BP_BOOK_AUTHOR,' : ''}
-            ${publisher ? 'BP_BOOK_PUBLISHER,' : ''}
-            BP_BOOK_START_NUM,
-            BP_BOOK_END_NUM,
-            BP_BOOK_START_DT,
-            BP_BOOK_END_DT
+            BP_BR_LAST_READ_NUM,
+            BP_BR_CONTENT_TEXT,
+            BP_BOOK_ID
         )
         VALUES 
         (
-            '${title}',
-            ${author ? `'${author}',` : ''}
-            ${publisher ? `'${publisher}',` : ''}
-            '${startPageNum}',
-            '${endPageNum}',
-            '${startDate}',
-            '${endDate}'
+            '${lastReadPageNum}',
+            '${contentText}',
+            '${bookId}'
         );`;
 
         let result: Response;
@@ -146,31 +125,21 @@ export class BookService {
         return result;
     }
 
-    async update(id, reqBody: BookCreateRequest): Promise<Response> {
+    async update(id, reqBody: ReportCreateRequest): Promise<Response> {
         const {
-            title,
-            author,
-            publisher,
-            startPageNum,
-            endPageNum,
-            startDate,
-            endDate
+            lastReadPageNum,
+            contentText
         } = reqBody;
-        
+
         const queryStr = 
         `UPDATE
-            BP_BOOK
+            BP_BOOK_REPORT
         SET
-            BP_BOOK_TITLE='${title}',
-            ${author ? `BP_BOOK_AUTHOR='${author}',` : ''}
-            ${publisher ? `BP_BOOK_PUBLISHER='${publisher}',` : ''}
-            BP_BOOK_START_NUM='${startPageNum}',
-            BP_BOOK_END_NUM='${endPageNum}',
-            BP_BOOK_START_DT='${startDate}',
-            BP_BOOK_END_DT='${endDate}',
+            BP_BR_LAST_READ_NUM='${lastReadPageNum}',
+            BP_BR_CONTENT_TEXT='${contentText}'
             UPDATE_DTHMS=CURRENT_TIMESTAMP()
         WHERE
-            BP_BOOK_ID='${id}';`;
+            BP_BR_ID='${id}';`;
 
         let result: Response;
         try {
@@ -189,11 +158,11 @@ export class BookService {
     async delete(id): Promise<Response> {        
         const queryStr = 
         `UPDATE
-            BP_BOOK
+            BP_BOOK_REPORT
         SET
             DEL_YN='Y'
         WHERE
-            BP_BOOK_ID='${id}';`;
+            BP_BR_ID='${id}';`;
         let result: Response;
         try {
             let queryResult = await this.dbExecute.execute(queryStr);
