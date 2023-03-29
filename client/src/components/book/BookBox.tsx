@@ -61,13 +61,12 @@ const BookBox = ({ data }: { data: Book }) => {
         if (window.confirm("도서를 삭제하시겠습니까?")) {
             axios
                 .put("http://localhost:4000/book/delete/" + bookId)
-                .then((response) => {
-                    const data = response.data;
+                .then(() => {
                     setIsError(false);
                     alert("도서가 삭제되었습니다.");
                     window.location.reload();
                 })
-                .catch((error) => {
+                .catch(() => {
                     setIsError(true);
                 });
         }

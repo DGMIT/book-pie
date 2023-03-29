@@ -53,15 +53,8 @@ const ReportBox = ({ bookId, data }: Props) => {
         !data ? "" : data.contentText
     );
 
-    const handleCreate = () => {};
-
-    const handleUpdate = () => {
-        setIsEditMode(false);
-    };
-
     const handleFetch = (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
         const body: ReportCreateRequest = {
             lastReadPageNum: lastReadPage,
             contentText: contentText,
@@ -79,31 +72,44 @@ const ReportBox = ({ bookId, data }: Props) => {
                         window.location.reload();
                     }
                 })
-                .catch((error) => {
+                .catch(() => {
                     setIsError(true);
                 });
         } else {
             //update
             axios
                 .put(
-                    `http://localhost:4000/report/${data.bookId}/${data.bookReportId}`,
+                    "http://localhost:4000/report/update/" + data.bookReportId,
                     body
                 )
                 .then((response) => {
                     const data = response.data;
                     if (data.result === "OK") {
                         setIsError(false);
-                        alert("독후감 수정이 완료되었습니다.");
+                        setIsEditMode(false);
                         window.location.reload();
                     }
                 })
-                .catch((error) => {
+                .catch(() => {
                     setIsError(true);
                 });
         }
     };
 
-    const handleDelete = () => {};
+    const handleDelete = () => {
+        if (window.confirm("독후감을 삭제하시겠습니까?")) {
+            axios
+                .put("http://localhost:4000/report/delete/" + data?.bookReportId)
+                .then(() => {
+                    setIsError(false);
+                    alert("독후감이 삭제되었습니다.");
+                    window.location.reload();
+                })
+                .catch(() => {
+                    setIsError(true);
+                });
+        }
+    };
 
     return (
         <StyledReportBox>
@@ -155,7 +161,7 @@ const ReportBox = ({ bookId, data }: Props) => {
                 </div>
                 <div className="button-box">
                     {!data && (
-                        <button type="submit" onClick={handleCreate}>
+                        <button type="submit" >
                             등록하기
                         </button>
                     )}
@@ -164,7 +170,7 @@ const ReportBox = ({ bookId, data }: Props) => {
                             <button onClick={() => setIsEditMode(false)}>
                                 취소
                             </button>
-                            <button type="submit" onClick={handleUpdate}>
+                            <button type="submit" >
                                 수정 완료
                             </button>
                         </>

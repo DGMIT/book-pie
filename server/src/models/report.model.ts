@@ -26,3 +26,5 @@ export interface ReportCreateRequest {
     lastReadPageNum: number,
     contentText: string
 }
+
+export interface ReportUpdateRequest extends ReportCreateRequest {}

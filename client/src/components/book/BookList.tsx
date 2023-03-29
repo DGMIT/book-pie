@@ -17,7 +17,7 @@ const BookList = () => {
                     setIsError(false);
                 }
             })
-            .catch((error) => {
+            .catch(() => {
                 setIsError(true);
             });
     };

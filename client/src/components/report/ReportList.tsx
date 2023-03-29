@@ -31,8 +31,6 @@ const ReportList = ({bookId}: {bookId: string}) => {
         }
 
         const lastReport = reportList[0];
-        console.log(lastReport.writtenDatetime);
-        console.log(getDate(lastReport.writtenDatetime))
         if(getDate(lastReport.writtenDatetime) === getDate()) {
             return true;
         }

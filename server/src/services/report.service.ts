@@ -1,6 +1,6 @@
 import { injectable, inject } from "inversify";
 import TYPES from "../constant/types";
-import { Report, Response, ReportListResponse, ReportCreateRequest, ReportResponse } from "../models/report.model";
+import { Report, Response, ReportListResponse, ReportCreateRequest, ReportResponse, ReportUpdateRequest } from "../models/report.model";
 import { DBexecute } from "./dbExecute.service";
 
 
@@ -123,7 +123,7 @@ export class ReportService {
         return result;
     }
 
-    async update(id, reqBody: ReportCreateRequest): Promise<Response> {
+    async update(id, reqBody: ReportUpdateRequest): Promise<Response> {
         const {
             lastReadPageNum,
             contentText
@@ -134,11 +134,10 @@ export class ReportService {
             BP_BOOK_REPORT
         SET
             BP_BR_LAST_READ_NUM='${lastReadPageNum}',
-            BP_BR_CONTENT_TEXT='${contentText}'
+            BP_BR_CONTENT_TEXT='${contentText}',
             UPDATE_DTHMS=CURRENT_TIMESTAMP()
         WHERE
             BP_BR_ID='${id}';`;
-
         let result: Response;
         try {
             let queryResult = await this.dbExecute.execute(queryStr);
