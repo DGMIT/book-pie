@@ -1,6 +1,6 @@
 import { injectable, inject } from "inversify";
 import TYPES from "../constant/types";
-import { Book, Response, BookListResponse, BookCreateRequest, BookResponse } from "../models/book.model";
+import { Book, Response, BookListResponse, BookCreateRequest, BookResponse, BookUpdateRequest } from "../models/book.model";
 import { DBexecute } from "./dbExecute.service";
 
 
@@ -20,7 +20,6 @@ export class BookService {
             BP_BOOK_END_NUM as 'endPageNum',
             BP_BOOK_START_DT as 'startDate',
             BP_BOOK_END_DT as 'endDate',
-            BP_BOOK_WEEKEND_INC_YN as 'weekendIncludeYN',
             WRT_DTHMS as 'writtenDatetime',
             UPDATE_DTHMS as 'updateDatetime'
         FROM 
@@ -64,7 +63,6 @@ export class BookService {
             BP_BOOK_END_NUM as 'endPageNum',
             BP_BOOK_START_DT as 'startDate',
             BP_BOOK_END_DT as 'endDate',
-            BP_BOOK_WEEKEND_INC_YN as 'weekendIncludeYN',
             WRT_DTHMS as 'writtenDatetime',
             UPDATE_DTHMS as 'updateDatetime'
         FROM 
@@ -146,7 +144,7 @@ export class BookService {
         return result;
     }
 
-    async update(id, reqBody: BookCreateRequest): Promise<Response> {
+    async update(id, reqBody: BookUpdateRequest): Promise<Response> {
         const {
             title,
             author,
