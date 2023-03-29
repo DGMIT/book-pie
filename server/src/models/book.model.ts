@@ -35,3 +35,4 @@ export interface BookCreateRequest {
     startDate: string,
     endDate: string,
 }
+export interface BookUpdateRequest extends BookCreateRequest {}
