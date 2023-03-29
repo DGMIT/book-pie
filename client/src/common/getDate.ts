@@ -1,10 +1,15 @@
 import moment from 'moment';
 import 'moment/locale/ko';
 
-export const getDate = (time?: string) => {
+/**
+ * 날짜 string 을 받아 포맷팅.
+ * @param datetime 매개변수 없으면 오늘 날짜 반환
+ * @returns "YYYY. MM. DD. (dd)" 형식의 날짜 string
+ */
+export const getDate = (datetime?: string) => {
     let m;
-    if(time) {
-        m = moment(time.slice(0, 10));
+    if(datetime) {
+        m = moment(datetime.slice(0, 10));
     } else {
         m = moment();
     }
