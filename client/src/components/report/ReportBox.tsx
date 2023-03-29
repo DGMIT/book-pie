@@ -132,6 +132,7 @@ const ReportBox = ({ bookId, data }: Props) => {
                             required
                             type="number"
                             min={1}
+                            max={60000}
                             onChange={(e) =>
                                 setLastReadPage(Number(e.target.value))
                             }

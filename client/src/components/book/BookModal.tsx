@@ -183,6 +183,7 @@ const BookModal = ({ modalIsOpen, setModalIsOpen, data }: Props) => {
                             name="startPageNum"
                             required
                             min={1}
+                            max={60000}
                             value={startPageNum}
                             onChange={(e) => {setStartPageNum(Number(e.target.value)); validatePageInput();}}
                         />
@@ -194,6 +195,7 @@ const BookModal = ({ modalIsOpen, setModalIsOpen, data }: Props) => {
                             name="endPageNum"
                             required
                             min={2}
+                            max={60000}
                             value={endPageNum}
                             onChange={(e) => {setEndPageNum(Number(e.target.value)); validatePageInput();}}
                         />
