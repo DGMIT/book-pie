@@ -53,11 +53,11 @@ const BookBox = ({ data }: { data: Book }) => {
     // const totalPage = data.endPageNum - data.startPageNum + 1;
     const pagePerDay = Math.ceil(leftPage / leftDay);
 
-    const handleUpdateBtn = () => {
+    const handleUpdate = () => {
         setModalIsOpen(true);
     };
 
-    const handleDeleteBtn = () => {
+    const handleDelete = () => {
         if (window.confirm("도서를 삭제하시겠습니까?")) {
             axios
                 .put("http://localhost:4000/book/delete/" + bookId)
@@ -66,7 +66,6 @@ const BookBox = ({ data }: { data: Book }) => {
                     setIsError(false);
                     alert("도서가 삭제되었습니다.");
                     window.location.reload();
-                    window.location.replace("/");
                 })
                 .catch((error) => {
                     setIsError(true);
@@ -78,13 +77,13 @@ const BookBox = ({ data }: { data: Book }) => {
         <StyledBookBox>
             <div className="box-top">
                 <p>{`${startDate} ~ ${endDate} (${totalPeriod}일)`}</p>
-                <button onClick={handleUpdateBtn}>수정</button>
+                <button onClick={handleUpdate}>수정</button>
                 <BookModal
                     modalIsOpen={modalIsOpen}
                     setModalIsOpen={setModalIsOpen}
                     data={data}
                 />
-                <button onClick={handleDeleteBtn}>삭제</button>
+                <button onClick={handleDelete}>삭제</button>
             </div>
             <div className="main">
                 <div className="chart">
