@@ -43,6 +43,10 @@ const StyledBookBox = styled.div`
                 line-height: 34px;
                 text-decoration: none;
             }
+            &.disabled a {
+                pointer-events: none;
+                background-color: #bbb;
+            }
         }
     }
 `;
@@ -120,7 +124,7 @@ const BookBox = ({ data }: { data: Book }) => {
                             </p>
                         </div>
                         {location.pathname.indexOf("/report") === -1 ? (
-                            <div className="button-box">
+                            <div className={`button-box${countDay <= 0 ? ' disabled' : ''}`}>
                                 <Link to={"/report/" + bookId}>독서하기</Link>
                             </div>
                         ) : null}
