@@ -29,7 +29,6 @@ export class ReportService {
         try{
             let queryResult = await this.dbExecute.execute(queryStr);
             const [row, column] = queryResult;
-            // console.log(row);
             if(!row || !Array.isArray(row) || !row.length) {
                 result = {
                     result: 'HAVE_NO_DATA'
@@ -90,11 +89,10 @@ export class ReportService {
 
 
 
-    async create(reqBody: ReportCreateRequest): Promise<Response> {
+    async create(bookId, reqBody: ReportCreateRequest): Promise<Response> {
         const {
             lastReadPageNum,
             contentText,
-            bookId,
         } = reqBody;
 
         const queryStr = 

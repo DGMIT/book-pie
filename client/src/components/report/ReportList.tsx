@@ -1,5 +1,7 @@
 import axios from "axios";
+import moment from "moment";
 import { useEffect, useState } from "react";
+import { getDate } from "../../common/getDate";
 import { Report } from "../../models/report.model";
 import ReportBox from "./ReportBox";
 
@@ -22,19 +24,35 @@ const ReportList = ({bookId}: {bookId: string}) => {
             });
     };
 
+    /**오늘 독후감을 썼는지 체크해주는 함수 */
+    const checkTodayReportExist = () => {
+        if(!reportList || reportList.length < 1) {
+            return false;
+        }
+
+        const lastReport = reportList[0];
+        console.log(lastReport.writtenDatetime);
+        console.log(getDate(lastReport.writtenDatetime))
+        if(getDate(lastReport.writtenDatetime) === getDate()) {
+            return true;
+        }
+
+        return false;
+    }
+
     useEffect(() => {
         handleFetch();
     }, []);
     
     return (
-        <section>
-            <ReportBox />
+        <ul>
+            {!checkTodayReportExist() && <li><ReportBox bookId={bookId}/></li>}
             {reportList && reportList.map((data: Report) => (
                 <li key={data.bookReportId}>
-                    <ReportBox data={data}/>
+                    <ReportBox bookId={bookId} data={data}/>
                 </li>
             ))}
-        </section>
+        </ul>
     )
 }
 

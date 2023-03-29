@@ -24,6 +24,5 @@ export interface ReportResponse extends Response{
 
 export interface ReportCreateRequest {
     lastReadPageNum: number,
-    contentText: string,
-    bookId: number
+    contentText: string
 }

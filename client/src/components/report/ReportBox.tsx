@@ -1,7 +1,8 @@
 import styled from "styled-components";
-import { Report } from "../../models/report.model";
-import { useState } from "react";
+import { Report, ReportCreateRequest } from "../../models/report.model";
+import { FormEvent, useState } from "react";
 import { getDate } from "../../common/getDate";
+import axios from "axios";
 
 const StyledReportBox = styled.div`
     border: 1px solid #ddd;
@@ -28,6 +29,7 @@ const StyledReportBox = styled.div`
             margin-bottom: 10px;
             textarea {
                 width: 100%;
+                resize: none;
             }
         }
     }
@@ -37,20 +39,81 @@ const StyledReportBox = styled.div`
 `;
 
 interface Props {
+    bookId: string;
     data?: Report;
 }
 
-const ReportBox = ({ data }: Props) => {
+const ReportBox = ({ bookId, data }: Props) => {
+    const [isError, setIsError] = useState<boolean>(false);
     const [isEditMode, setIsEditMode] = useState(!data ? true : false);
-    const [lastReadPage, setLastReadPage] = useState<number>(1);
-    const [contentText, setContentText] = useState<string>("");
+    const [lastReadPage, setLastReadPage] = useState<number>(
+        !data ? 1 : data.lastReadPageNum
+    );
+    const [contentText, setContentText] = useState<string>(
+        !data ? "" : data.contentText
+    );
+
+    const handleCreate = () => {};
+
+    const handleUpdate = () => {
+        setIsEditMode(false);
+    };
+
+    const handleFetch = (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+
+        const body: ReportCreateRequest = {
+            lastReadPageNum: lastReadPage,
+            contentText: contentText,
+        };
+
+        //create
+        if (!data) {
+            axios
+                .post("http://localhost:4000/report/" + bookId, body)
+                .then((response) => {
+                    const data = response.data;
+                    if (data.result === "OK") {
+                        setIsError(false);
+                        alert("독후감 등록이 완료되었습니다.");
+                        window.location.reload();
+                    }
+                })
+                .catch((error) => {
+                    setIsError(true);
+                });
+        } else {
+            //update
+            axios
+                .put(
+                    `http://localhost:4000/report/${data.bookId}/${data.bookReportId}`,
+                    body
+                )
+                .then((response) => {
+                    const data = response.data;
+                    if (data.result === "OK") {
+                        setIsError(false);
+                        alert("독후감 수정이 완료되었습니다.");
+                        window.location.reload();
+                    }
+                })
+                .catch((error) => {
+                    setIsError(true);
+                });
+        }
+    };
+
+    const handleDelete = () => {};
+
     return (
         <StyledReportBox>
             <div className="box-top">
-                {!isEditMode && <button onClick={() => setIsEditMode(true)}>수정</button>}
-                <button>삭제</button>
+                {!isEditMode && (
+                    <button onClick={() => setIsEditMode(true)}>수정</button>
+                )}
+                <button onClick={handleDelete}>삭제</button>
             </div>
-            <div className="main">
+            <form className="main" onSubmit={handleFetch}>
                 {data ? (
                     <p>{getDate(data.writtenDatetime)}</p>
                 ) : (
@@ -61,6 +124,7 @@ const ReportBox = ({ data }: Props) => {
                         <input
                             value={lastReadPage}
                             required
+                            type="number"
                             min={1}
                             onChange={(e) =>
                                 setLastReadPage(Number(e.target.value))
@@ -74,26 +138,39 @@ const ReportBox = ({ data }: Props) => {
                 <div className="text">
                     {isEditMode ? (
                         <>
-                        <textarea
-                            required
-                            minLength={10}
-                            maxLength={500}
-                            rows={5}
-                            value={contentText}
-                            onChange={(e) => setContentText(e.target.value)}
+                            <textarea
+                                required
+                                minLength={10}
+                                maxLength={500}
+                                rows={5}
+                                value={contentText}
+                                placeholder="최소 10자 이상 작성이 필요합니다."
+                                onChange={(e) => setContentText(e.target.value)}
                             />
-                        <span>{contentText.length + ' / 500'}</span>
+                            <span>{contentText.length + " / 500"}</span>
                         </>
-                        
                     ) : (
                         <p>{data?.contentText}</p>
                     )}
                 </div>
-            </div>
-            <div className="button-box">
-                {!data && <button>등록하기</button>}
-                {isEditMode && data && <button onClick={() => setIsEditMode(false)}>수정 완료</button>}
-            </div>
+                <div className="button-box">
+                    {!data && (
+                        <button type="submit" onClick={handleCreate}>
+                            등록하기
+                        </button>
+                    )}
+                    {isEditMode && data && (
+                        <>
+                            <button onClick={() => setIsEditMode(false)}>
+                                취소
+                            </button>
+                            <button type="submit" onClick={handleUpdate}>
+                                수정 완료
+                            </button>
+                        </>
+                    )}
+                </div>
+            </form>
         </StyledReportBox>
     );
 };

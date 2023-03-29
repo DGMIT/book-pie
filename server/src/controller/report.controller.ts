@@ -41,7 +41,7 @@ export class ReportController implements interfaces.Controller {
     @httpPost("/:bookId")
     private async create(@requestParam("bookId") bookId: number, @request() req: express.Request, @response() res: express.Response) {
         try {
-            const data = await this.reportService.create(req.body);
+            const data = await this.reportService.create(bookId, req.body);
             if (data.result === 'OK') {
                 res.status(201).json(data);
             } else {
