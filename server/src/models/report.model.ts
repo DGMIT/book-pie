@@ -19,7 +19,7 @@ export interface ReportListResponse extends Response{
 
 export interface ReportResponse extends Response{
     result: 'OK',
-    reportData: Report;
+    reportData: Report
 }
 
 export interface ReportCreateRequest {

@@ -26,6 +26,11 @@ export interface BookResponse extends Response{
     bookData: Book;
 }
 
+export interface DaysResponse extends Response{
+    result: 'OK',
+    daysArr: string[]
+}
+
 export interface BookCreateRequest {
     title: string,
     author?: string,

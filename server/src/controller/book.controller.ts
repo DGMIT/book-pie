@@ -37,6 +37,20 @@ export class BookController implements interfaces.Controller {
         }
     }
 
+    @httpGet("/days/all")
+    private async getConsecutiveDays(@response() res: express.Response) {
+        try {
+            const data = await this.bookService.getConsecutiveDays();
+            if (data.result === 'OK') {
+                res.status(200).json(data);
+            } else {
+                res.status(404).json(data);
+            }
+        } catch (err) {
+            res.status(500).json({err});
+        }
+    }
+
     @httpPost("/")
     private async create(@request() req: express.Request, @response() res: express.Response) {
         try {

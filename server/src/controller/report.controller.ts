@@ -11,7 +11,6 @@ export class ReportController implements interfaces.Controller {
 
     @httpGet("/:bookId")
     async getList(@requestParam("bookId") bookId: number, @response() res: express.Response) {
-        // console.log(bookId);
         try{
             const data = await this.reportService.getList(bookId);
             if (data.result === 'OK' || data.result === 'HAVE_NO_DATA') {
