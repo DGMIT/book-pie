@@ -12,7 +12,7 @@ export class DBexecute {
                 user: "root",
                 password: "localmysql1234",
                 database: "BOOK_PIE",
-                timezone: "Asia/Seoul",
+                timezone: "+00:00",
                 charset: "utf8mb4",
             });
 
