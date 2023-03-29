@@ -12,6 +12,8 @@ export class DBexecute {
                 user: "root",
                 password: "localmysql1234",
                 database: "BOOK_PIE",
+                timezone: "Asia/Seoul",
+                charset: "utf8mb4",
             });
 
             // 데이터베이스 연결
