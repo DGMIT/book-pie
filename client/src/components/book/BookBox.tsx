@@ -4,7 +4,7 @@ import { Book } from "../../models/book.model";
 import axios from "axios";
 import { useState } from "react";
 import BookModal from "./BookModal";
-import { useLocation } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
 import moment from "moment";
 
 const StyledBookBox = styled.div`
@@ -32,6 +32,17 @@ const StyledBookBox = styled.div`
         flex: 1;
         .button-box {
             text-align: right;
+            & a {
+                display: inline-block;
+                height: 34px;
+                width: 100px;
+                border-radius: 8px;
+                background-color: #9357E0;
+                color: #fff;
+                text-align: center;
+                line-height: 34px;
+                text-decoration: none;
+            }
         }
     }
 `;
@@ -86,7 +97,7 @@ const BookBox = ({ data }: { data: Book }) => {
             </div>
             <div className="main">
                 <div className="chart">
-                    <p>{leftDay >= 0 ? 'D-' + leftDay : 'D+' + leftDay }</p>
+                    <p>{leftDay >= 0 ? "D-" + leftDay : "D+" + leftDay}</p>
                     <div>차트 56%</div>
                     <p>120 / {data.endPageNum} p</p>
                 </div>
@@ -99,7 +110,7 @@ const BookBox = ({ data }: { data: Book }) => {
                         <p>{countDay}일차</p>
                         <div>
                             {/* <p>14일 연속 성공🔥🔥</p>
-                            <p>✅ 성공 18일  ❌ 실패 3일</p> */}
+                            <p>✅ 성공 18일</p> */}
                         </div>
                         <div>
                             <p>일일 권장 독서량 {pagePerDay}p</p>
@@ -108,12 +119,11 @@ const BookBox = ({ data }: { data: Book }) => {
                                 {leftDay}일
                             </p>
                         </div>
-                        {location.pathname.indexOf('/report') === -1 ?
-                        <div className="button-box">
-                            <button>
+                        {location.pathname.indexOf("/report") === -1 ? (
+                            <div className="button-box">
                                 <Link to={"/report/" + bookId}>독서하기</Link>
-                            </button>
-                        </div> : null}
+                            </div>
+                        ) : null}
                     </div>
                 </div>
             </div>

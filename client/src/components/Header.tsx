@@ -7,9 +7,9 @@ const Header = () => {
         <header>
             <h1>BOOK PIE</h1>
             {location.pathname.indexOf('/report') !== -1 ? 
-                <button>
+                <div className="button-box">
                     <Link to="/">책 목록으로</Link>
-                </button>
+                </div>
                 : null
             }
         </header>
