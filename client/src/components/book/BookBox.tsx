@@ -21,12 +21,13 @@ const StyledBookBox = styled.div`
             margin-right: 10px;
         }
     }
-
     .main {
         display: flex;
     }
-    .chart {
+    .chart-box {
         margin-right: 30px;
+        width: 15%;
+        text-align: center;
     }
     .contents {
         flex: 1;
@@ -37,7 +38,7 @@ const StyledBookBox = styled.div`
                 height: 34px;
                 width: 100px;
                 border-radius: 8px;
-                background-color: #9357E0;
+                background-color: #9357e0;
                 color: #fff;
                 text-align: center;
                 line-height: 34px;
@@ -51,6 +52,47 @@ const StyledBookBox = styled.div`
     }
 `;
 
+const StyledDonutChart = styled.div<{ chartPercentage: number }>`
+    --chartPercentage : ${(props) => '\"' + props.chartPercentage + '%\"'};
+    --chartDeg : ${(props) => Math.round(props.chartPercentage * 3.6) + 'deg'};
+    width: 100px;
+    height: 100px;
+    display: inline-block;
+
+    .chart {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        transition: 0.3s;
+        background: lightgray;
+        display: inline-block;
+    }
+
+    .chart:after {
+        content: var(--chartPercentage);
+        text-align: center;
+        line-height: 60px;
+        background: #fff; /* 백그라운드 컬러로 중앙가리기 */
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 60%;
+        height: 60%; /* 도넛의 너비 설정 */
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+    }
+    .chart-bar {
+        width: inherit;
+        height: inherit;
+        border-radius: 50%;
+        background: conic-gradient(
+            #9986dd var(--chartDeg),
+            #fbb871 var(--chartDeg)
+        ); /* 차트 설정 */
+    }
+`;
+
 const BookBox = ({ data }: { data: Book }) => {
     const location = useLocation();
     const [isError, setIsError] = useState<boolean>(false);
@@ -61,11 +103,11 @@ const BookBox = ({ data }: { data: Book }) => {
     const endDate = data.endDate.slice(0, 10);
     const totalPeriod = moment(endDate).diff(moment(startDate), "days") + 1;
     const countDay = moment().diff(moment(startDate), "days") + 1;
+    const chartPercentage =  Math.round((data.maxLastReadNum / data.endPageNum) * 100);
 
     //일일 권장 독서량
-    const leftPage = data.endPageNum - data.startPageNum; //수정 해야함
+    const leftPage = data.endPageNum - data.maxLastReadNum; //수정 해야함
     const leftDay = totalPeriod - countDay;
-    // const totalPage = data.endPageNum - data.startPageNum + 1;
     const pagePerDay = Math.ceil(leftPage / leftDay);
 
     const handleUpdate = () => {
@@ -100,10 +142,16 @@ const BookBox = ({ data }: { data: Book }) => {
                 <button onClick={handleDelete}>삭제</button>
             </div>
             <div className="main">
-                <div className="chart">
+                <div className="chart-box">
                     <p>{leftDay >= 0 ? "D-" + leftDay : "D+" + leftDay}</p>
-                    <div>차트 56%</div>
-                    <p>120 / {data.endPageNum} p</p>
+                    <StyledDonutChart chartPercentage={chartPercentage}>
+                        <div className="chart">
+                            <div className="chart-bar" data-deg={chartPercentage}></div>
+                        </div>
+                    </StyledDonutChart>
+                    <p>
+                        {data.maxLastReadNum} / {data.endPageNum} p
+                    </p>
                 </div>
                 <div className="contents">
                     <h2>{data.title}</h2>
@@ -113,10 +161,6 @@ const BookBox = ({ data }: { data: Book }) => {
                     <div>
                         <p>{countDay}일차</p>
                         <div>
-                            {/* <p>14일 연속 성공🔥🔥</p>
-                            <p>✅ 성공 18일</p> */}
-                        </div>
-                        <div>
                             <p>일일 권장 독서량 {pagePerDay}p</p>
                             <p>
                                 남은 페이지 / 남은 일수 = {leftPage}p /{" "}
@@ -124,7 +168,11 @@ const BookBox = ({ data }: { data: Book }) => {
                             </p>
                         </div>
                         {location.pathname.indexOf("/report") === -1 ? (
-                            <div className={`button-box${countDay <= 0 ? ' disabled' : ''}`}>
+                            <div
+                                className={`button-box${
+                                    countDay <= 0 ? " disabled" : ""
+                                }`}
+                            >
                                 <Link to={"/report/" + bookId}>독서하기</Link>
                             </div>
                         ) : null}
