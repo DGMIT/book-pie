@@ -21,7 +21,14 @@ export class BookService {
             BP_BOOK_START_DT as 'startDate',
             BP_BOOK_END_DT as 'endDate',
             WRT_DTHMS as 'writtenDatetime',
-            UPDATE_DTHMS as 'updateDatetime'
+            UPDATE_DTHMS as 'updateDatetime',
+            COALESCE((SELECT 
+                MAX(BP_BR_LAST_READ_NUM) 
+            FROM 
+                BP_BOOK_REPORT 
+            WHERE 
+                BP_BOOK_REPORT.BP_BOOK_ID = BP_BOOK.BP_BOOK_ID AND BP_BOOK_REPORT.DEL_YN = 'N'
+			), 0) as 'maxLastReadNum'
         FROM 
             BP_BOOK
         WHERE
@@ -63,7 +70,14 @@ export class BookService {
             BP_BOOK_START_DT as 'startDate',
             BP_BOOK_END_DT as 'endDate',
             WRT_DTHMS as 'writtenDatetime',
-            UPDATE_DTHMS as 'updateDatetime'
+            UPDATE_DTHMS as 'updateDatetime',
+            COALESCE((SELECT 
+                MAX(BP_BR_LAST_READ_NUM) 
+            FROM 
+                BP_BOOK_REPORT 
+            WHERE 
+                BP_BOOK_REPORT.BP_BOOK_ID = BP_BOOK.BP_BOOK_ID AND BP_BOOK_REPORT.DEL_YN = 'N'
+			), 0) as 'maxLastReadNum'
         FROM 
             BP_BOOK
         WHERE

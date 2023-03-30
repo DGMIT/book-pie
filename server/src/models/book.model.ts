@@ -8,7 +8,8 @@ export interface Book {
     startDate: string,
     endDate: string,
     writtenDatetime: string,
-    updateDatetime: null | string
+    updateDatetime: null | string,
+    maxLastReadNum: number
 }
 
 export interface Response {
