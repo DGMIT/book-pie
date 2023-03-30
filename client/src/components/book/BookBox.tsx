@@ -88,7 +88,7 @@ const StyledDonutChart = styled.div<{ chartPercentage: number }>`
         border-radius: 50%;
         background: conic-gradient(
             #9986dd var(--chartDeg),
-            #fbb871 var(--chartDeg)
+            #e5e5e5 var(--chartDeg)
         ); /* 차트 설정 */
     }
 `;
