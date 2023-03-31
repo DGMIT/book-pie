@@ -52,7 +52,7 @@ export class ReportController implements interfaces.Controller {
     }
 
     @httpPut("/update/:id")
-    private async update(@requestParam("id") id: string, @request() req: express.Request, @response() res: express.Response) {
+    private async update(@requestParam("id") id: number, @request() req: express.Request, @response() res: express.Response) {
         try {
             const data = await this.reportService.update(id, req.body);
             if (data.result === 'OK') {
@@ -66,7 +66,7 @@ export class ReportController implements interfaces.Controller {
     }
 
     @httpPut("/delete/:id")
-    private async delete(@requestParam("id") id: string, @response() res: express.Response) {
+    private async delete(@requestParam("id") id: number, @response() res: express.Response) {
         try {
             const data = await this.reportService.delete(id);
             if (data.result === 'OK') {
