@@ -22,7 +22,7 @@ export class BookService {
             BP_BOOK_END_DT as 'endDate',
             WRT_DTHMS as 'writtenDatetime',
             UPDATE_DTHMS as 'updateDatetime',
-            COALESCE((SELECT 
+            IFNULL((SELECT 
                 MAX(BP_BR_LAST_READ_NUM) 
             FROM 
                 BP_BOOK_REPORT 
@@ -71,7 +71,7 @@ export class BookService {
             BP_BOOK_END_DT as 'endDate',
             WRT_DTHMS as 'writtenDatetime',
             UPDATE_DTHMS as 'updateDatetime',
-            COALESCE((SELECT 
+            IFNULL((SELECT 
                 MAX(BP_BR_LAST_READ_NUM) 
             FROM 
                 BP_BOOK_REPORT 
