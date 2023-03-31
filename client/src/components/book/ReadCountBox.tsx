@@ -44,23 +44,24 @@ const ReadCountBox = () => {
         return 0;
     }
 
-    const handleFetch = () => {
-        axios
-            .get("http://localhost:4000/book/days/all")
-            .then((response) => {
-                const data = response.data;
-                if(data.result === 'OK') {
-                    setDays(countConsecutiveDays(data.daysArr));
-                    setIsError(false);
-                }
-            })
-            .catch((error) => {
+    const getConsecutiveDays = async () => { 
+        //함수명 고치기, async await -> 수정, axios 인스턴스 만들어서 공통 세팅 적용 //에러 처리
+        try{
+            const response = await axios.get("http://localhost:4000/book/days/all");
+            const data = response.data;
+            if(data.result === 'OK') {
+                setDays(countConsecutiveDays(data.daysArr));
+                setIsError(false);
+            } else {
                 setIsError(true);
-            });
+            }
+        } catch(error) {
+            setIsError(true);
+        }
     };
     
     useEffect(() => {
-        handleFetch();
+        getConsecutiveDays();
     }, [])
 
     return (
