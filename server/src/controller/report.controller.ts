@@ -1,81 +1,89 @@
 import * as express from "express";
-import { interfaces, controller, httpGet, httpPost, httpPut, request, response, requestParam } from "inversify-express-utils";
+import {
+  interfaces,
+  controller,
+  httpGet,
+  httpPost,
+  httpPut,
+  request,
+  response,
+} from "inversify-express-utils";
 import { inject } from "inversify";
-import {ReportService} from "../services/report.service";
 import TYPES from "../constant/types";
+import ReportService from "../services/report.service";
+import { RequestCreateReport, RequestUpdateReport } from "../models/report.model";
+import { RequestDeleteReport } from "../models/report.model";
 
 @controller("/report")
 export class ReportController implements interfaces.Controller {
+  constructor(@inject(TYPES.ReportService) private reportService: ReportService) {}
 
-    constructor( @inject(TYPES.ReportService) private reportService: ReportService) {}
+  @httpGet("/:bookId")
+  async getReportList(@request() req: express.Request, @response() res: express.Response) {
+    const bookId = Number(req.params.bookId);
+    return await this.reportService.getReportList(bookId);
+  }
 
-    @httpGet("/:bookId")
-    async getList(@requestParam("bookId") bookId: number, @response() res: express.Response) {
-        try{
-            const data = await this.reportService.getList(bookId);
-            if (data.result === 'OK' || data.result === 'HAVE_NO_DATA') {
-                res.status(200).json(data);
-            } else {
-                res.status(404).json(data);
-            }
-        }catch(err) {
-            res.status(500).json(err);
-        }
-    }
-    
-    @httpGet("/get/:id")
-    private async getById(@requestParam("id") id: number, @response() res: express.Response) {
-        try {
-            const data = await this.reportService.getById(id);
-            if (data.result === 'OK') {
-                res.status(200).json(data);
-            } else {
-                res.status(404).json(data);
-            }
-        } catch (err) {
-            res.status(500).json({err});
-        }
-    }
+  // @httpGet("/:reportId")
+  // private async getReport(
+  //   @request() req: express.Request,
+  //   @response() res: express.Response
+  // ) {
+  //   const reportId = Number(req.params.reportId);
+  //   return await this.reportService.getReport(reportId);
+  // }
 
-    @httpPost("/:bookId")
-    private async create(@requestParam("bookId") bookId: number, @request() req: express.Request, @response() res: express.Response) {
-        try {
-            const data = await this.reportService.create(bookId, req.body);
-            if (data.result === 'OK') {
-                res.status(201).json(data);
-            } else {
-                res.status(404).json(data);
-            }
-        } catch (err) {
-            res.status(500).json({ err });
-        }
-    }
+  // @httpGet("/days/all")
+  // private async getConsecutiveDays(@response() res: express.Response) {
+  //   try {
+  //     const data = await this.reportService.getConsecutiveDays();
+  //     if (data.result === "OK") {
+  //       res.status(200).json(data);
+  //     } else {
+  //       res.status(404).json(data);
+  //     }
+  //   } catch (err) {
+  //     res.status(500).json({ err });
+  //   }
+  // }
 
-    @httpPut("/update/:id")
-    private async update(@requestParam("id") id: number, @request() req: express.Request, @response() res: express.Response) {
-        try {
-            const data = await this.reportService.update(id, req.body);
-            if (data.result === 'OK') {
-                res.status(200).json(data);
-            } else {
-                res.status(404).json(data);
-            }
-        } catch (err) {
-            res.status(500).json({ err });
-        }
-    }
+  @httpPost("/")
+  private async createReport(
+    @request() req: express.Request,
+    @response() res: express.Response
+  ) {
+    const newPost: RequestCreateReport = {
+      lastReadPageNum: Number(req.body.lastReadPageNum),
+      contentText: req.body.contentText,
+      bookId: Number(req.body.bookId)
+    };
 
-    @httpPut("/delete/:id")
-    private async delete(@requestParam("id") id: number, @response() res: express.Response) {
-        try {
-            const data = await this.reportService.delete(id);
-            if (data.result === 'OK') {
-                res.status(204).json(data);
-            } else {
-                res.status(404).json(data);
-            }
-        } catch (err) {
-            res.status(500).json({err});
-        }
-    }
+    return await this.reportService.createReport(newPost);
+  }
+
+  @httpPut("/update/:reportId") //@@업데이트와 삭제 엔드 포인트 어떻게 구현하는지 확인 필요
+  private async updateReport(
+    @request() req: express.Request,
+    @response() res: express.Response
+  ) {
+    const updatePost: RequestUpdateReport = {
+      reportId: Number(req.params.reportId),
+      lastReadPageNum: Number(req.body.lastReadPageNum),
+      contentText: req.body.contentText
+    };
+
+    return await this.reportService.updateReport(updatePost);
+  }
+
+  @httpPut("/delete/:reportId")
+  private async deleteReport(
+    @request() req: express.Request,
+    @response() res: express.Response
+  ) {
+    const reportId: RequestDeleteReport = Number(req.params.reportId);
+
+    return await this.reportService.deleteReport(reportId);
+  }
 }
+
+export default ReportController;

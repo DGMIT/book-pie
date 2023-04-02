@@ -7,23 +7,18 @@ const BookList = () => {
     const [bookList, setBookList] = useState<Book[]>();
     const [isError, setIsError] = useState<boolean>(false);
     
-    const handleFetch = () => {
-        axios
-            .get("http://localhost:4000/book")
-            .then((response) => {
-                const data = response.data;
-                if(data.result === 'OK') {
-                    setBookList(data.bookList);
-                    setIsError(false);
-                }
-            })
-            .catch(() => {
-                setIsError(true);
-            });
+    const getBookList = async () => {
+        try{
+            const response = await axios.get("http://localhost:4000/book");
+            const data = response.data;
+            setBookList(data);
+        } catch(error) {
+            setIsError(true);
+        }
     };
 
     useEffect(() => {
-        handleFetch();
+        getBookList();
     }, []);
     return (
         <ul>

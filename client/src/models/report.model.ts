@@ -1,5 +1,5 @@
 export interface Report {
-    bookReportId: number,
+    reportId: number,
     lastReadPageNum: number,
     contentText: string,
     writtenDatetime: string,
@@ -7,24 +7,19 @@ export interface Report {
     bookId: number
 }
 
-export interface Response {
-    result: 'OK' | 'ERROR' | 'HAVE_NO_DATA'
-}
+//request
+export type RequestGetReportList = number;
 
-export interface ReportListResponse extends Response{
-    result: 'OK',
-    totalCount: number,
-    reportList: Report[]
-}
+export type RequestGetReport = number;
 
-export interface ReportResponse extends Response{
-    result: 'OK',
-    reportData: Report;
-}
-
-export interface ReportCreateRequest {
+export interface RequestCreateReport {
     lastReadPageNum: number,
-    contentText: string
+    contentText: string,
+    bookId: number
+}
+export interface RequestUpdateReport {
+    lastReadPageNum: number,
+    contentText: string,
 }
 
-export interface ReportUpdateRequest extends ReportCreateRequest {}
+export type RequestDeleteReport = number;

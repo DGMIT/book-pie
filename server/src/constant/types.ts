@@ -1,7 +1,10 @@
 const TYPES = {
-    DBexecute: Symbol.for('DBexecute'),
+    mysqlPool: Symbol.for('mysqlPool'),
+    BookRepository: Symbol.for('BookRepository'),
     BookService: Symbol.for('BookService'),
-    ReportService: Symbol.for('ReportService')
+    ReportRepository: Symbol.for('ReportRepository'),
+    ReportService: Symbol.for('ReportService'),
+    DBexecute: Symbol.for('DBexecute'),
 }
 
 export default TYPES;

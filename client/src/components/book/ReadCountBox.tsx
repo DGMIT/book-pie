@@ -4,71 +4,74 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 
 const StyledReadCountBox = styled.div`
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    margin-bottom: 20px;
-    padding: 10px 20px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  margin-bottom: 20px;
+  padding: 10px 20px;
 `;
 
 const ReadCountBox = () => {
-    const [days, setDays] = useState<number>(0);
-    const [isError, setIsError] = useState<boolean>(false);
+  const [days, setDays] = useState<number>(0);
+  const [isError, setIsError] = useState<boolean>(false);
 
-    const countConsecutiveDays = (arr: string[]) => {
-        const daysUniqueArr = Array.from(new Set(arr.map(dateStr => moment(dateStr).format('YYYY-MM-DD'))));
-        if(daysUniqueArr.length < 1) return 0;
-        
-        let count = 0;
-        //오늘 독후감이 있으면 오늘부터 카운트
-        if(daysUniqueArr[0] === moment().format('YYYY-MM-DD')) {
-            const today = moment();
-            for(let day of daysUniqueArr){
-                if(day === today.format('YYYY-MM-DD')) {
-                    count++;
-                    today.subtract(1, 'days');
-                    continue;
-                } else break;
-            }
-            return count;
-        } else if(daysUniqueArr[0] === moment().subtract(1, 'days').format('YYYY-MM-DD')) { //어제부터 카운트
-            const yesterday = moment().subtract(1, 'days');
-            for(let day of daysUniqueArr){
-                if(day === yesterday.format('YYYY-MM-DD')) {
-                    count++;
-                    yesterday.subtract(1, 'days');
-                    continue;
-                } else break;
-            }
-            return count;
-        }
-        return 0;
+  const countConsecutiveDays = (arr: [{writtenDatetime: string}]) => {
+    const dateArr = arr.map(el => el.writtenDatetime);
+    const daysUniqueArr = Array.from(
+      new Set(dateArr.map((dateStr) => moment(dateStr).format("YYYY-MM-DD")))
+    );
+    if (daysUniqueArr.length < 1) return 0;
+
+    let count = 0;
+    //오늘 독후감이 있으면 오늘부터 카운트
+    if (daysUniqueArr[0] === moment().format("YYYY-MM-DD")) {
+      const today = moment();
+      for (let day of daysUniqueArr) {
+        if (day === today.format("YYYY-MM-DD")) {
+          count++;
+          today.subtract(1, "days");
+          continue;
+        } else break;
+      }
+      return count;
+    } else if (
+      daysUniqueArr[0] === moment().subtract(1, "days").format("YYYY-MM-DD")
+    ) {
+      //어제부터 카운트
+      const yesterday = moment().subtract(1, "days");
+      for (let day of daysUniqueArr) {
+        if (day === yesterday.format("YYYY-MM-DD")) {
+          count++;
+          yesterday.subtract(1, "days");
+          continue;
+        } else break;
+      }
+      return count;
     }
+    return 0;
+  };
 
-    const getConsecutiveDays = async () => { 
-        //함수명 고치기, async await -> 수정, axios 인스턴스 만들어서 공통 세팅 적용 //에러 처리
-        try{
-            const response = await axios.get("http://localhost:4000/book/days/all");
-            const data = response.data;
-            if(data.result === 'OK') {
-                setDays(countConsecutiveDays(data.daysArr));
-                setIsError(false);
-            } else {
-                setIsError(true);
-            }
-        } catch(error) {
-            setIsError(true);
-        }
-    };
-    
-    useEffect(() => {
-        getConsecutiveDays();
-    }, [])
+  const getConsecutiveDays = async () => {
+    try {
+      const response = await axios.get("http://localhost:4000/book/days/all");
+      const data = response.data;
+      setDays(countConsecutiveDays(data));
+      setIsError(false);
+    } catch (error) {
+      setIsError(true);
+    }
+  };
 
-    return (
-        <StyledReadCountBox>
-            <h2>{days}일째 독서  중 {"🔥".repeat(Math.ceil(days / 7))}</h2>
-        </StyledReadCountBox>
-    )
-}
+  useEffect(() => {
+    getConsecutiveDays();
+  }, []);
+
+  return (
+    <StyledReadCountBox>
+      <h2>
+        {days}일째 독서 중 {"🔥".repeat(Math.ceil(days / 7))}
+      </h2>
+    </StyledReadCountBox>
+  );
+};
 
 export default ReadCountBox;
