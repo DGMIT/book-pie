@@ -1,3 +1,4 @@
+import { useState } from "react";
 import styled from "styled-components";
 
 const StyledErrorMsgBox = styled.div`
@@ -8,7 +9,7 @@ const StyledErrorMsgBox = styled.div`
   z-index: 100;
   height: 60px;
   line-height: 60px;
-  padding-left: 10px;
+  padding-left: 25px;
   min-width: 200px;
   background: var(--error-box-color);
   border-radius: 8px;
@@ -20,7 +21,7 @@ const StyledErrorMsgBox = styled.div`
     flex: 1;
     text-align: center;
   }
-  
+
   button {
     border: none;
     background: transparent;
@@ -28,19 +29,29 @@ const StyledErrorMsgBox = styled.div`
     font-size: 24px;
     padding: 0 20px;
   }
+
+  &.hide {
+    display: none;
+  }
 `;
 
 type Props = {
-  msg: string;
+  errMsg: string;
 };
 
-const ErrorMsgBox = ({ msg = "에러가 발생했습니다." }: Props) => {
+const ErrorMsgBox = ({ errMsg }: Props) => {
+  const [isHide, setIsHide] = useState(false);
+
+  const handleOnClick = () => {
+    setIsHide(true);
+  };
+
   return (
-    <StyledErrorMsgBox>
-      <span>{msg}</span>
-      <button>×</button>
+    <StyledErrorMsgBox className={isHide ? "hide" : ""}>
+      <span>{errMsg}</span>
+      <button onClick={handleOnClick}>×</button>
     </StyledErrorMsgBox>
-  )
+  );
 };
 
 export default ErrorMsgBox;

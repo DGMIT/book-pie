@@ -1,13 +1,15 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { Book } from "../../models/book.model";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useState } from "react";
 import BookModal from "./BookModal";
 import { useLocation } from "react-router-dom";
 import moment from "moment";
 import { StyledBox } from "../../styled/StyledBox";
 import { StyledMainLinkBtn } from "../../styled/StyledBtn";
+import { getErrorMessage } from "../../lib/getErrorMessage";
+import ErrorMsgBox from "../common/ErrorMsgBox";
 
 const StyledBookBox = styled(StyledBox)`
   .box-top {
@@ -80,6 +82,7 @@ const StyledDonutChart = styled.div<{ chartPercentage: number }>`
 
 const BookBox = ({ data }: { data: Book }) => {
   const [isError, setIsError] = useState<boolean>(false);
+  const [errMsg, setErrMsg] = useState<string>("");
   const location = useLocation();
   const [modalIsOpen, setModalIsOpen] = useState<boolean>(false);
 
@@ -109,7 +112,9 @@ const BookBox = ({ data }: { data: Book }) => {
         alert("도서가 삭제되었습니다.");
         window.location.reload();
       } catch (error) {
+        const { response } = error as unknown as AxiosError;
         setIsError(true);
+        setErrMsg(getErrorMessage(response?.status));
       }
     }
   };
@@ -121,59 +126,62 @@ const BookBox = ({ data }: { data: Book }) => {
   };
 
   return (
-    <StyledBookBox>
-      <div className="box-top">
-        <p>{`${startDate} ~ ${endDate} (${totalPeriod}일)`}</p>
-        <button onClick={handleUpdate}>수정</button>
-        <BookModal
-          modalIsOpen={modalIsOpen}
-          setModalIsOpen={setModalIsOpen}
-          data={data}
-        />
-        <button onClick={handleDelete}>삭제</button>
-      </div>
-      <div className="main">
-        <div className="chart-box">
-          <p>{leftDay >= 0 ? "D-" + leftDay : "D+" + Math.abs(leftDay)}</p>
-          <StyledDonutChart chartPercentage={chartPercentage}>
-            <div className="chart">
-              <div className="chart-bar" data-deg={chartPercentage}></div>
-            </div>
-          </StyledDonutChart>
-          <p>
-            {data.maxLastReadNum} / {data.endPageNum} p
-          </p>
+    <>
+      {isError && <ErrorMsgBox errMsg={errMsg} />}
+      <StyledBookBox>
+        <div className="box-top">
+          <p>{`${startDate} ~ ${endDate} (${totalPeriod}일)`}</p>
+          <button onClick={handleUpdate}>수정</button>
+          <BookModal
+            modalIsOpen={modalIsOpen}
+            setModalIsOpen={setModalIsOpen}
+            data={data}
+          />
+          <button onClick={handleDelete}>삭제</button>
         </div>
-        <div className="contents-box">
-          <h2>{data.title}</h2>
-          <p>{`${data.author ? data.author : ""}${
-            data.author && data.publisher ? " | " : ""
-          }${data.publisher ? data.publisher : ""}`}</p>
-          <div className="data">
-            {validateReadBtn() ? (
-              <>
-                <p>{countDay}일차</p>
-                <div>
-                  <p>일일 권장 독서량 {pagePerDay}p</p>
-                  <p>
-                    남은 페이지 / 남은 일수 = {leftPage}p / {leftDay}일
-                  </p>
-                </div>
-              </>
-            ) : (
-              <div>독후감 작성 기간이 아닙니다.</div>
-            )}
+        <div className="main">
+          <div className="chart-box">
+            <p>{leftDay >= 0 ? "D-" + leftDay : "D+" + Math.abs(leftDay)}</p>
+            <StyledDonutChart chartPercentage={chartPercentage}>
+              <div className="chart">
+                <div className="chart-bar" data-deg={chartPercentage}></div>
+              </div>
+            </StyledDonutChart>
+            <p>
+              {data.maxLastReadNum} / {data.endPageNum} p
+            </p>
           </div>
-          {location.pathname.indexOf("/report") === -1 ? (
-            <StyledMainLinkBtn
-              className={`button-box${validateReadBtn() ? "" : " disabled"}`}
-            >
-              <Link to={"/report/" + bookId}>독서하기</Link>
-            </StyledMainLinkBtn>
-          ) : null}
+          <div className="contents-box">
+            <h2>{data.title}</h2>
+            <p>{`${data.author ? data.author : ""}${
+              data.author && data.publisher ? " | " : ""
+            }${data.publisher ? data.publisher : ""}`}</p>
+            <div className="data">
+              {validateReadBtn() ? (
+                <>
+                  <p>{countDay}일차</p>
+                  <div>
+                    <p>일일 권장 독서량 {pagePerDay}p</p>
+                    <p>
+                      남은 페이지 / 남은 일수 = {leftPage}p / {leftDay}일
+                    </p>
+                  </div>
+                </>
+              ) : (
+                <div>독후감 작성 기간이 아닙니다.</div>
+              )}
+            </div>
+            {location.pathname.indexOf("/report") === -1 ? (
+              <StyledMainLinkBtn
+                className={`button-box${validateReadBtn() ? "" : " disabled"}`}
+              >
+                <Link to={"/report/" + bookId}>독서하기</Link>
+              </StyledMainLinkBtn>
+            ) : null}
+          </div>
         </div>
-      </div>
-    </StyledBookBox>
+      </StyledBookBox>
+    </>
   );
 };
 

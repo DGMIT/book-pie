@@ -1,14 +1,17 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { StyledBox } from "../../styled/StyledBox";
+import ErrorMsgBox from "../common/ErrorMsgBox";
+import { getErrorMessage } from "../../lib/getErrorMessage";
 
 const ReadCountBox = () => {
-  const [days, setDays] = useState<number>(0);
   const [isError, setIsError] = useState<boolean>(false);
+  const [errMsg, setErrMsg] = useState<string>("");
+  const [days, setDays] = useState<number>(0);
 
-  const countConsecutiveDays = (arr: [{writtenDatetime: string}]) => {
-    const dateArr = arr.map(el => el.writtenDatetime);
+  const countConsecutiveDays = (arr: [{ writtenDatetime: string }]) => {
+    const dateArr = arr.map((el) => el.writtenDatetime);
     const daysUniqueArr = Array.from(
       new Set(dateArr.map((dateStr) => moment(dateStr).format("YYYY-MM-DD")))
     );
@@ -50,7 +53,9 @@ const ReadCountBox = () => {
       setDays(countConsecutiveDays(data));
       setIsError(false);
     } catch (error) {
+      const { response } = error as unknown as AxiosError;
       setIsError(true);
+      setErrMsg(getErrorMessage(response?.status));
     }
   };
 
@@ -59,11 +64,15 @@ const ReadCountBox = () => {
   }, []);
 
   return (
-    <StyledBox>
-      <h2>
-        {days}일째 독서 중 {"🔥".repeat(Math.ceil(days / 7))}
-      </h2>
-    </StyledBox>
+    <>
+      {isError && <ErrorMsgBox errMsg={errMsg} />}
+
+      <StyledBox>
+        <h2>
+          {days}일째 독서 중 {"🔥".repeat(Math.ceil(days / 7))}
+        </h2>
+      </StyledBox>
+    </>
   );
 };
 

@@ -16,7 +16,6 @@ const StyledHeader = styled.header`
     }
 `;
 
-
 const Header = () => {
     const location = useLocation();
 

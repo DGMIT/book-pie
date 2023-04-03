@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { FormEvent, useState } from "react";
 import { Book, RequestUpdateBook } from "../../models/book.model";
 import moment from "moment";
@@ -6,6 +6,8 @@ import Modal from "react-modal";
 import styled from "styled-components";
 import { StyledMainBtn, StyledSubBtn } from "../../styled/StyledBtn";
 import { StyledInput } from "../../styled/StyledInput";
+import { getErrorMessage } from "../../lib/getErrorMessage";
+import ErrorMsgBox from "../common/ErrorMsgBox";
 
 const customModalStyles = {
   content: {
@@ -52,7 +54,7 @@ const StyledModalContainer = styled.div`
     color: var(--dark-gray);
     line-height: 1.6;
   }
-  
+
   .button-box {
     margin-top: 20px;
     text-align: right;
@@ -77,6 +79,7 @@ interface Props {
 
 const BookModal = ({ modalIsOpen, setModalIsOpen, data }: Props) => {
   const [isError, setIsError] = useState<boolean>(false);
+  const [errMsg, setErrMsg] = useState<string>("");
   const [startPageNum, setStartPageNum] = useState(data?.startPageNum || 1);
   const [endPageNum, setEndPageNum] = useState(data?.endPageNum || 2);
   const [pageErrMsgShow, setPageErrMsgShow] = useState(false);
@@ -163,153 +166,163 @@ const BookModal = ({ modalIsOpen, setModalIsOpen, data }: Props) => {
         window.location.reload();
       }
     } catch (error) {
+      const { response } = error as unknown as AxiosError;
       setIsError(true);
+      setErrMsg(getErrorMessage(response?.status));
     }
   };
 
   return (
-    <Modal
-      isOpen={modalIsOpen}
-      onRequestClose={() => setModalIsOpen(false)}
-      style={customModalStyles}
-      ariaHideApp={false}
-    >
-      <StyledModalContainer>
-        <h2>책 {data ? "수정하기" : "등록하기"}</h2>
-        <form onSubmit={handleFetch}>
-          <div>
-            <label htmlFor="book-title" className="label">
-              책 제목<span className="required-icon">*</span>
-            </label>
-            <StyledInput
-              width={"500px"}
-              id="book-title"
-              name="title"
-              required
-              minLength={1}
-              maxLength={200}
-              defaultValue={data ? data.title : ""}
-            />
-          </div>
-          <div>
-            <label htmlFor="book-author" className="label">
-              저자
-            </label>
-            <StyledInput
-              width={"500px"}
-              id="book-author"
-              name="author"
-              minLength={1}
-              maxLength={100}
-              defaultValue={data ? data.author : ""}
-            />
-          </div>
-          <div>
-            <label htmlFor="book-publisher" className="label">
-              출판사
-            </label>
-            <StyledInput
-              width={"500px"}
-              id="book-publisher"
-              name="publisher"
-              minLength={1}
-              maxLength={100}
-              defaultValue={data ? data.publisher : ""}
-            />
-          </div>
-          <div className="container page-box">
-            <div className="label">
-              페이지<span className="required-icon">*</span>
+    <>
+      {isError && <ErrorMsgBox errMsg={errMsg} />}
+
+      <Modal
+        isOpen={modalIsOpen}
+        onRequestClose={() => setModalIsOpen(false)}
+        style={customModalStyles}
+        ariaHideApp={false}
+      >
+        <StyledModalContainer>
+          <h2>책 {data ? "수정하기" : "등록하기"}</h2>
+          <form onSubmit={handleFetch}>
+            <div>
+              <label htmlFor="book-title" className="label">
+                책 제목<span className="required-icon">*</span>
+              </label>
+              <StyledInput
+                width={"500px"}
+                id="book-title"
+                name="title"
+                required
+                minLength={1}
+                maxLength={200}
+                defaultValue={data ? data.title : ""}
+              />
             </div>
             <div>
-              <div>
-                <label htmlFor="book-start-page-num">시작 페이지 </label>
-                <StyledInput
-                  type="number"
-                  id="book-start-page-num"
-                  name="startPageNum"
-                  required
-                  min={1}
-                  max={60000}
-                  value={startPageNum}
-                  onChange={(e) => {
-                    setStartPageNum(Number(e.target.value));
-                    validatePageInput();
-                  }}
-                />
-                {' p ~ '}<label htmlFor="book-end-page-num">마지막 페이지 </label>
-                <StyledInput
-                  type="number"
-                  id="book-end-page-num"
-                  name="endPageNum"
-                  required
-                  min={2}
-                  max={60000}
-                  value={endPageNum}
-                  onChange={(e) => {
-                    setEndPageNum(Number(e.target.value));
-                    validatePageInput();
-                  }}
-                />
-                {' p'}
+              <label htmlFor="book-author" className="label">
+                저자
+              </label>
+              <StyledInput
+                width={"500px"}
+                id="book-author"
+                name="author"
+                minLength={1}
+                maxLength={100}
+                defaultValue={data ? data.author : ""}
+              />
+            </div>
+            <div>
+              <label htmlFor="book-publisher" className="label">
+                출판사
+              </label>
+              <StyledInput
+                width={"500px"}
+                id="book-publisher"
+                name="publisher"
+                minLength={1}
+                maxLength={100}
+                defaultValue={data ? data.publisher : ""}
+              />
+            </div>
+            <div className="container page-box">
+              <div className="label">
+                페이지<span className="required-icon">*</span>
               </div>
-              {pageErrMsgShow && (
-                <p className="error-msg">
-                  마지막 페이지는 시작 페이지 보다 커야합니다.
-                </p>
+              <div>
+                <div>
+                  <label htmlFor="book-start-page-num">시작 페이지 </label>
+                  <StyledInput
+                    type="number"
+                    id="book-start-page-num"
+                    name="startPageNum"
+                    required
+                    min={1}
+                    max={60000}
+                    value={startPageNum}
+                    onChange={(e) => {
+                      setStartPageNum(Number(e.target.value));
+                      validatePageInput();
+                    }}
+                  />
+                  {" p ~ "}
+                  <label htmlFor="book-end-page-num">마지막 페이지 </label>
+                  <StyledInput
+                    type="number"
+                    id="book-end-page-num"
+                    name="endPageNum"
+                    required
+                    min={2}
+                    max={60000}
+                    value={endPageNum}
+                    onChange={(e) => {
+                      setEndPageNum(Number(e.target.value));
+                      validatePageInput();
+                    }}
+                  />
+                  {" p"}
+                </div>
+                {pageErrMsgShow && (
+                  <p className="error-msg">
+                    마지막 페이지는 시작 페이지 보다 커야합니다.
+                  </p>
+                )}
+              </div>
+            </div>
+            <div className="container period-box">
+              <div className="label">
+                기간<span className="required-icon">*</span>
+              </div>
+              <div>
+                <label htmlFor="book-start-date-num">시작일 </label>
+                <StyledInput
+                  type="date"
+                  id="book-start-date-num"
+                  name="startDate"
+                  required
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                />
+                {" ~"}
+                <label htmlFor="book-end-date-num"> 종료일 </label>
+                <StyledInput
+                  type="date"
+                  id="book-end-date-num"
+                  name="endDate"
+                  required
+                  value={endDate}
+                  onChange={(e) => setEndDate(e.target.value)}
+                />
+              </div>
+              {dateErrMsgShow && (
+                <p className="error-msg">죵료일은 시작일 보다 커야합니다.</p>
               )}
             </div>
-          </div>
-          <div className="container period-box">
-            <div className="label">
-              기간<span className="required-icon">*</span>
+            <div className="data-box">
+              <div>
+                <div>총페이지: {totalPage}p</div>
+                <div>총 기간: {totalPeriod}일</div>
+                <div>
+                  일일 권장 독서량: {Math.ceil(totalPage / totalPeriod)}p
+                </div>
+                <span>
+                  총 페이지 / 기간 = {totalPage} p / {totalPeriod} 일 ={" "}
+                  {Math.ceil(totalPage / totalPeriod)}p (반올림)
+                </span>
+              </div>
             </div>
-            <div>
-              <label htmlFor="book-start-date-num">시작일 </label>
-              <StyledInput
-                type="date"
-                id="book-start-date-num"
-                name="startDate"
-                required
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-              />
-              {" ~"}<label htmlFor="book-end-date-num"> 종료일 </label>
-              <StyledInput
-                type="date"
-                id="book-end-date-num"
-                name="endDate"
-                required
-                value={endDate}
-                onChange={(e) => setEndDate(e.target.value)}
-              />
+            <div className="button-box">
+              <StyledSubBtn type="reset" onClick={() => setModalIsOpen(false)}>
+                취소
+              </StyledSubBtn>
+              <StyledMainBtn type="submit">
+                {data ? "수정" : "등록"}
+              </StyledMainBtn>
             </div>
-            {dateErrMsgShow && (
-              <p className="error-msg">죵료일은 시작일 보다 커야합니다.</p>
-            )}
-          </div>
-          <div className="data-box">
-            <div>
-              <div>총페이지: {totalPage}p</div>
-              <div>총 기간: {totalPeriod}일</div>
-              <div>일일 권장 독서량: {Math.ceil(totalPage / totalPeriod)}p</div>
-              <span>
-                총 페이지 / 기간 = {totalPage} p / {totalPeriod} 일 ={" "}
-                {Math.ceil(totalPage / totalPeriod)}p (반올림)
-              </span>
-            </div>
-          </div>
-          <div className="button-box">
-            <StyledSubBtn type="reset" onClick={() => setModalIsOpen(false)}>
-              취소
-            </StyledSubBtn>
-            <StyledMainBtn type="submit">
-              {data ? "수정" : "등록"}
-            </StyledMainBtn>
-          </div>
-        </form>
-      </StyledModalContainer>
-    </Modal>
+          </form>
+        </StyledModalContainer>
+      </Modal>
+    </>
   );
 };
 
