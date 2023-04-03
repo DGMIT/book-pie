@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { StyledBox } from "../../styled/StyledBox";
 import ErrorMsgBox from "../common/ErrorMsgBox";
 import { getErrorMessage } from "../../lib/getErrorMessage";
+import axiosInstance from "../../lib/axiosInstance";
 
 const ReadCountBox = () => {
   const [isError, setIsError] = useState<boolean>(false);
@@ -48,7 +49,7 @@ const ReadCountBox = () => {
 
   const getConsecutiveDays = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/book/days/all");
+      const response = await axiosInstance.get("/book/days/all");
       const data = response.data;
       setDays(countConsecutiveDays(data));
       setIsError(false);

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Book } from "../../models/book.model";
 import ErrorMsgBox from "../common/ErrorMsgBox";
 import { getErrorMessage } from "../../lib/getErrorMessage";
+import axiosInstance from "../../lib/axiosInstance";
 
 const BookList = () => {
   const [isError, setIsError] = useState<boolean>(false);
@@ -12,7 +13,7 @@ const BookList = () => {
 
   const getBookList = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/book");
+      const response = await axiosInstance.get("/book");
       const data = response.data;
       setBookList(data);
     } catch (error) {

@@ -8,6 +8,7 @@ import { StyledMainBtn, StyledSubBtn } from "../../styled/StyledBtn";
 import { StyledInput } from "../../styled/StyledInput";
 import { getErrorMessage } from "../../lib/getErrorMessage";
 import ErrorMsgBox from "../common/ErrorMsgBox";
+import axiosInstance from "../../lib/axiosInstance";
 
 const customModalStyles = {
   content: {
@@ -148,7 +149,7 @@ const BookModal = ({ modalIsOpen, setModalIsOpen, data }: Props) => {
     try {
       //create
       if (!data) {
-        await axios.post("http://localhost:4000/book", body);
+        await axiosInstance.post("/book", body);
         // console.log(response)
         setIsError(false);
         alert("도서 등록이 완료되었습니다.");
@@ -156,8 +157,8 @@ const BookModal = ({ modalIsOpen, setModalIsOpen, data }: Props) => {
         window.location.replace("/");
       } else {
         //update
-        await axios.put(
-          "http://localhost:4000/book/update/" + data.bookId,
+        await axiosInstance.put(
+          "/book/update/" + data.bookId,
           body
         );
         setIsError(false);

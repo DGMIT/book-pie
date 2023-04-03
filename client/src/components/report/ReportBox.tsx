@@ -11,6 +11,7 @@ import { StyledInput, StyledTextarea } from "../../styled/StyledInput";
 import { StyledMainBtn, StyledSubBtn } from "../../styled/StyledBtn";
 import ErrorMsgBox from "../common/ErrorMsgBox";
 import { getErrorMessage } from "../../lib/getErrorMessage";
+import axiosInstance from "../../lib/axiosInstance";
 
 const StyledReportBox = styled.div`
   border: 1px solid #ddd;
@@ -74,7 +75,7 @@ const ReportBox = ({ bookId, data, endPageNum }: Props) => {
           contentText: contentText,
           bookId: Number(bookId),
         };
-        await axios.post("http://localhost:4000/report/", body);
+        await axiosInstance.post("/report/", body);
         setIsError(false);
         alert("독후감 등록이 완료되었습니다.");
         window.location.reload();
@@ -84,8 +85,8 @@ const ReportBox = ({ bookId, data, endPageNum }: Props) => {
           lastReadPageNum: lastReadPage,
           contentText: contentText,
         };
-        await axios.put(
-          "http://localhost:4000/report/update/" + data.reportId,
+        await axiosInstance.put(
+          "/report/update/" + data.reportId,
           body
         );
         setIsError(false);
@@ -102,7 +103,7 @@ const ReportBox = ({ bookId, data, endPageNum }: Props) => {
   const handleDelete = async () => {
     if (data && window.confirm("독후감을 삭제하시겠습니까?")) {
       try {
-        await axios.put("http://localhost:4000/report/delete/" + data.reportId);
+        await axiosInstance.put("/report/delete/" + data.reportId);
         setIsError(false);
         alert("독후감이 삭제되었습니다.");
         window.location.reload();
