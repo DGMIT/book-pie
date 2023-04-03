@@ -5,12 +5,17 @@
   box-sizing: border-box;
 }
 
+button {
+  cursor: pointer;
+}
+
 :root {
   --point-color: #9357e0;
   --light-point-color: #9986dd;
   --dark-gray: #a0a0a0;
   --light-gray: #e5e5e5;
   --error-color: #e53737;
+  --error-box-color: #ffbcbc;
   --black-color: #191919;
   --gray-border-color: #C6C6C6;
 }
