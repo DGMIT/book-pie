@@ -1,14 +1,7 @@
 import axios from "axios";
 import moment from "moment";
 import { useEffect, useState } from "react";
-import styled from "styled-components";
-
-const StyledReadCountBox = styled.div`
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  margin-bottom: 20px;
-  padding: 10px 20px;
-`;
+import { StyledBox } from "../../styled/StyledBox";
 
 const ReadCountBox = () => {
   const [days, setDays] = useState<number>(0);
@@ -66,11 +59,11 @@ const ReadCountBox = () => {
   }, []);
 
   return (
-    <StyledReadCountBox>
+    <StyledBox>
       <h2>
         {days}일째 독서 중 {"🔥".repeat(Math.ceil(days / 7))}
       </h2>
-    </StyledReadCountBox>
+    </StyledBox>
   );
 };
 

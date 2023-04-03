@@ -7,6 +7,8 @@ import {
 import { FormEvent, useState } from "react";
 import { getDate } from "../../common/getDate";
 import axios from "axios";
+import { StyledInput, StyledTextarea } from "../../styled/StyledInput";
+import { StyledMainBtn, StyledSubBtn } from "../../styled/StyledBtn";
 
 const StyledReportBox = styled.div`
   border: 1px solid #ddd;
@@ -45,7 +47,7 @@ const StyledReportBox = styled.div`
 interface Props {
   bookId: string;
   data?: Report;
-  endPageNum: number
+  endPageNum: number;
 }
 
 const ReportBox = ({ bookId, data, endPageNum }: Props) => {
@@ -121,7 +123,7 @@ const ReportBox = ({ bookId, data, endPageNum }: Props) => {
         )}
         <div className="page">
           {isEditMode ? (
-            <input
+            <StyledInput
               value={lastReadPage}
               required
               type="number"
@@ -136,7 +138,7 @@ const ReportBox = ({ bookId, data, endPageNum }: Props) => {
         </div>
         <div className="text">
           {isEditMode ? (
-            <>
+            <StyledTextarea>
               <textarea
                 required
                 minLength={10}
@@ -147,17 +149,17 @@ const ReportBox = ({ bookId, data, endPageNum }: Props) => {
                 onChange={(e) => setContentText(e.target.value)}
               />
               <span>{contentText.length + " / 500"}</span>
-            </>
+            </StyledTextarea>
           ) : (
             <p>{data?.contentText}</p>
           )}
         </div>
         <div className="button-box">
-          {!data && <button type="submit">등록하기</button>}
+          {!data && <StyledMainBtn type="submit">등록하기</StyledMainBtn>}
           {isEditMode && data && (
             <>
-              <button onClick={() => setIsEditMode(false)}>취소</button>
-              <button type="submit">수정 완료</button>
+              <StyledSubBtn onClick={() => setIsEditMode(false)}>취소</StyledSubBtn>
+              <StyledMainBtn type="submit">수정 완료</StyledMainBtn>
             </>
           )}
         </div>

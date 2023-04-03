@@ -6,13 +6,10 @@ import { useState } from "react";
 import BookModal from "./BookModal";
 import { useLocation } from "react-router-dom";
 import moment from "moment";
+import { StyledBox } from "../../styled/StyledBox";
+import { StyledMainLinkBtn } from "../../styled/StyledBtn";
 
-const StyledBookBox = styled.div`
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  margin-bottom: 20px;
-  padding: 10px 20px;
-
+const StyledBookBox = styled(StyledBox)`
   .box-top {
     display: flex;
     height: 20px;
@@ -29,26 +26,14 @@ const StyledBookBox = styled.div`
     width: 15%;
     text-align: center;
   }
-  .contents {
+  .contents-box {
     flex: 1;
-    .button-box {
-      text-align: right;
-      & a {
-        display: inline-block;
-        height: 34px;
-        width: 100px;
-        border-radius: 8px;
-        background-color: #9357e0;
-        color: #fff;
-        text-align: center;
-        line-height: 34px;
-        text-decoration: none;
-      }
-      &.disabled a {
-        pointer-events: none;
-        background-color: #bbb;
-      }
+    .data {
+      height: 70px;
     }
+  }
+  .button-box {
+    text-align: right;
   }
 `;
 
@@ -87,8 +72,8 @@ const StyledDonutChart = styled.div<{ chartPercentage: number }>`
     height: inherit;
     border-radius: 50%;
     background: conic-gradient(
-      #9986dd var(--chartDeg),
-      #e5e5e5 var(--chartDeg)
+      var(--light-point-color) var(--chartDeg),
+      var(--light-gray) var(--chartDeg)
     ); /* 차트 설정 */
   }
 `;
@@ -131,7 +116,7 @@ const BookBox = ({ data }: { data: Book }) => {
 
   const validateReadBtn = () => {
     if (moment().diff(moment(startDate), "days") < 0) return false;
-    if (moment().diff(moment(endDate), "days") > 0) return false;
+    // if (moment().diff(moment(endDate), "days") > 0) return false;
     return true;
   };
 
@@ -149,7 +134,7 @@ const BookBox = ({ data }: { data: Book }) => {
       </div>
       <div className="main">
         <div className="chart-box">
-          <p>{leftDay >= 0 ? "D-" + leftDay : "D+" + leftDay}</p>
+          <p>{leftDay >= 0 ? "D-" + leftDay : "D+" + Math.abs(leftDay)}</p>
           <StyledDonutChart chartPercentage={chartPercentage}>
             <div className="chart">
               <div className="chart-bar" data-deg={chartPercentage}></div>
@@ -159,14 +144,14 @@ const BookBox = ({ data }: { data: Book }) => {
             {data.maxLastReadNum} / {data.endPageNum} p
           </p>
         </div>
-        <div className="contents">
+        <div className="contents-box">
           <h2>{data.title}</h2>
           <p>{`${data.author ? data.author : ""}${
             data.author && data.publisher ? " | " : ""
           }${data.publisher ? data.publisher : ""}`}</p>
-          <div>
+          <div className="data">
             {validateReadBtn() ? (
-              <div>
+              <>
                 <p>{countDay}일차</p>
                 <div>
                   <p>일일 권장 독서량 {pagePerDay}p</p>
@@ -174,18 +159,18 @@ const BookBox = ({ data }: { data: Book }) => {
                     남은 페이지 / 남은 일수 = {leftPage}p / {leftDay}일
                   </p>
                 </div>
-              </div>
+              </>
             ) : (
-              <p>독후감 작성 기간이 아닙니다.</p>
+              <div>독후감 작성 기간이 아닙니다.</div>
             )}
-            {location.pathname.indexOf("/report") === -1 ? (
-              <div
-                className={`button-box${validateReadBtn() ? "" : " disabled"}`}
-              >
-                <Link to={"/report/" + bookId}>독서하기</Link>
-              </div>
-            ) : null}
           </div>
+          {location.pathname.indexOf("/report") === -1 ? (
+            <StyledMainLinkBtn
+              className={`button-box${validateReadBtn() ? "" : " disabled"}`}
+            >
+              <Link to={"/report/" + bookId}>독서하기</Link>
+            </StyledMainLinkBtn>
+          ) : null}
         </div>
       </div>
     </StyledBookBox>

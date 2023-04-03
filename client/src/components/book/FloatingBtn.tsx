@@ -6,13 +6,14 @@ import BookModal from "./BookModal";
 const StyledFloatingBtn = styled.button`
     position: fixed;
     right: 60px;
-    bottom: 60px;
+    bottom: 40px;
     height: 60px;
     width: 60px;
     border-radius: 50%;
     border: 0;
     font-size: 50px;
     cursor: pointer;
+    color: var(--point-color);
 `;
 
 
