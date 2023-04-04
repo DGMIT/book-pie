@@ -7,7 +7,7 @@ import BookModal from "./BookModal";
 import { useLocation } from "react-router-dom";
 import moment from "moment";
 import { StyledBox } from "../../styled/StyledBox";
-import { StyledMainLinkBtn } from "../../styled/StyledBtn";
+import { StyledMainLinkBtn, StyledSmallDeleteBtn, StyledSmallSubBtn } from "../../styled/StyledBtn";
 import { getErrorMessage } from "../../lib/getErrorMessage";
 import ErrorMsgBox from "../common/ErrorMsgBox";
 import axiosInstance from "../../lib/axiosInstance";
@@ -132,13 +132,13 @@ const BookBox = ({ data }: { data: Book }) => {
       <StyledBookBox>
         <div className="box-top">
           <p>{`${startDate} ~ ${endDate} (${totalPeriod}일)`}</p>
-          <button onClick={handleUpdate}>수정</button>
+          <StyledSmallSubBtn onClick={handleUpdate}>수정</StyledSmallSubBtn>
           <BookModal
             modalIsOpen={modalIsOpen}
             setModalIsOpen={setModalIsOpen}
             data={data}
           />
-          <button onClick={handleDelete}>삭제</button>
+          <StyledSmallDeleteBtn onClick={handleDelete}>삭제</StyledSmallDeleteBtn>
         </div>
         <div className="main">
           <div className="chart-box">

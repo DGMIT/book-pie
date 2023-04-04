@@ -8,7 +8,7 @@ import { FormEvent, useState } from "react";
 import { getDate } from "../../lib/getDate";
 import axios, { AxiosError } from "axios";
 import { StyledInput, StyledTextarea } from "../../styled/StyledInput";
-import { StyledMainBtn, StyledSubBtn } from "../../styled/StyledBtn";
+import { StyledMainBtn, StyledSmallDeleteBtn, StyledSmallSubBtn, StyledSubBtn } from "../../styled/StyledBtn";
 import ErrorMsgBox from "../common/ErrorMsgBox";
 import { getErrorMessage } from "../../lib/getErrorMessage";
 import axiosInstance from "../../lib/axiosInstance";
@@ -122,9 +122,9 @@ const ReportBox = ({ bookId, data, endPageNum }: Props) => {
       <StyledReportBox>
         <div className="box-top">
           {!isEditMode && (
-            <button onClick={() => setIsEditMode(true)}>수정</button>
+            <StyledSmallSubBtn onClick={() => setIsEditMode(true)}>수정</StyledSmallSubBtn>
           )}
-          <button onClick={handleDelete}>삭제</button>
+          <StyledSmallDeleteBtn onClick={handleDelete}>삭제</StyledSmallDeleteBtn>
         </div>
         <form className="main" onSubmit={handleFetch}>
           {data ? (
