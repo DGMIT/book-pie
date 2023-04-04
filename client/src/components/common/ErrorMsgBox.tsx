@@ -47,7 +47,7 @@ const ErrorMsgBox = ({ errMsg }: Props) => {
   };
 
   return (
-    <StyledErrorMsgBox className={isHide ? "hide" : ""}>
+    <StyledErrorMsgBox className={`error-box ${isHide ? "hide" : ""}`}>
       <span>{errMsg}</span>
       <button onClick={handleOnClick}>×</button>
     </StyledErrorMsgBox>
