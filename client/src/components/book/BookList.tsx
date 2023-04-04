@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { Book } from "../../models/book.model";
 import ErrorMsgBox from "../common/ErrorMsgBox";
 import { getErrorMessage } from "../../lib/getErrorMessage";
-import axiosInstance from "../../lib/axiosInstance";
+import { bookAxios } from "../../lib/axiosInstance";
 import styled from "styled-components";
 
 const StyledMsg = styled.div`
@@ -20,7 +20,7 @@ const BookList = () => {
 
   const getBookList = async () => {
     try {
-      const response = await axiosInstance.get("/book");
+      const response = await bookAxios.get("/");
       const data = response.data;
       setBookList(data);
     } catch (error) {
@@ -38,12 +38,15 @@ const BookList = () => {
       {isError && <ErrorMsgBox errMsg={errMsg} />}
 
       <ul>
-        {bookList && Array.isArray(bookList) ?
+        {bookList && Array.isArray(bookList) ? (
           bookList.map((data: Book) => (
             <li key={data.bookId}>
               <BookBox data={data} />
             </li>
-          )) : <StyledMsg>도서를 등록해주세요.</StyledMsg>}
+          ))
+        ) : (
+          <StyledMsg>도서를 등록해주세요.</StyledMsg>
+        )}
       </ul>
     </>
   );

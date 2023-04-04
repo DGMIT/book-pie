@@ -12,6 +12,7 @@ interface ReportRepositoryInterface {
   createReport<T>(request: RequestCreateReport, connection?: any): Promise<T>,
   updateReport<T>(request: RequestUpdateReport, connection?: any): Promise<T>,
   deleteReport<T>(request: RequestDeleteReport, connection?: any): Promise<T>,
+  getConsecutiveDays<T>(connection?: any): Promise<T[]>,
 }
 
 export default ReportRepositoryInterface;

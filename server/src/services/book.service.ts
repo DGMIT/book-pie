@@ -118,27 +118,6 @@ class BookService {
 
     return result;
   }
-
-  //연속 독서일수 API
-  public async getConsecutiveDays<T>(): Promise<T[]> {
-    let result: T[];
-    let connection;
-
-    try {
-      connection = await this.mysqlPool.getConnection();
-      connection.beginTransaction();
-
-      result = await this.repository.getConsecutiveDays(connection);
-      connection && connection.commit();
-    } catch (error) {
-      connection && connection.rollback();
-      throw error;
-    } finally {
-      connection && connection.release();
-    }
-
-    return result;
-  }
 }
 
 export default BookService;

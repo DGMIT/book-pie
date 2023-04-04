@@ -6,6 +6,7 @@ export enum ReportQueryId {
   createReport,
   updateReport,
   deleteReport,
+  getConsecutiveDays,
 }
 
 export const ReportQuery = (
@@ -99,13 +100,24 @@ export const ReportQuery = (
       `);
       queryParams.push(request);
       break;
+      
+    case ReportQueryId.getConsecutiveDays:
+      queryStr.push(`
+          SELECT
+            R.WRT_DTHMS AS 'writtenDatetime' 
+          FROM
+            BP_BOOK_REPORT R
+          ORDER BY
+            R.WRT_DTHMS DESC
+        `);
+      break;
 
     default:
       break;
   }
 
-  if(queryStr.length > 0) {
-    queryInfo.queryStr = queryStr.join(' ');
+  if (queryStr.length > 0) {
+    queryInfo.queryStr = queryStr.join(" ");
     queryInfo.queryParams = queryParams;
   }
 

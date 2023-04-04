@@ -5,8 +5,7 @@ export enum BookQueryId {
   getBook,
   createBook,
   updateBook,
-  deleteBook,
-  getConsecutiveDays,
+  deleteBook
 }
 
 export const BookQuery = (
@@ -144,17 +143,6 @@ export const BookQuery = (
           B.BP_BOOK_ID = ?
       `);
       queryParams.push(request);
-      break;
-
-    case BookQueryId.getConsecutiveDays:
-      queryStr.push(`
-        SELECT
-          R.WRT_DTHMS AS 'writtenDatetime' 
-        FROM
-          BP_BOOK_REPORT R
-        ORDER BY
-          R.WRT_DTHMS DESC
-      `);
       break;
 
     default:

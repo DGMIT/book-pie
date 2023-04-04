@@ -6,7 +6,7 @@ import ReportList from "../components/report/ReportList";
 import { Book } from "../models/book.model";
 import { getErrorMessage } from "../lib/getErrorMessage";
 import ErrorMsgBox from "../components/common/ErrorMsgBox";
-import axiosInstance from "../lib/axiosInstance";
+import { bookAxios } from "../lib/axiosInstance";
 
 const ReportPage = () => {
   const [isError, setIsError] = useState<boolean>(false);
@@ -17,7 +17,7 @@ const ReportPage = () => {
   //도서 데이터 가져오기, api 호출부 컴포넌트에서 분리
   const getBookData = async () => {
     try {
-      const response = await axiosInstance.get("/book/" + bookId);
+      const response = await bookAxios.get("/" + bookId);
       const data = response.data;
       setBookData(data);
       setIsError(false);

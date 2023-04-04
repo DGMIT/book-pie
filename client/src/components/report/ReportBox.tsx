@@ -8,10 +8,15 @@ import { FormEvent, useState } from "react";
 import { getDate } from "../../lib/getDate";
 import { AxiosError } from "axios";
 import { StyledInput, StyledTextarea } from "../../styled/StyledInput";
-import { StyledMainBtn, StyledSmallDeleteBtn, StyledSmallSubBtn, StyledSubBtn } from "../../styled/StyledBtn";
+import {
+  StyledMainBtn,
+  StyledSmallDeleteBtn,
+  StyledSmallSubBtn,
+  StyledSubBtn,
+} from "../../styled/StyledBtn";
 import ErrorMsgBox from "../common/ErrorMsgBox";
 import { getErrorMessage } from "../../lib/getErrorMessage";
-import axiosInstance from "../../lib/axiosInstance";
+import { reportAxios } from "../../lib/axiosInstance";
 
 const StyledReportBox = styled.div`
   border: 1px solid #ddd;
@@ -75,7 +80,7 @@ const ReportBox = ({ bookId, data, endPageNum }: Props) => {
           contentText: contentText,
           bookId: Number(bookId),
         };
-        await axiosInstance.post("/report/", body);
+        await reportAxios.post("/", body);
         setIsError(false);
         alert("독후감 등록이 완료되었습니다.");
         window.location.reload();
@@ -85,10 +90,7 @@ const ReportBox = ({ bookId, data, endPageNum }: Props) => {
           lastReadPageNum: lastReadPage,
           contentText: contentText,
         };
-        await axiosInstance.put(
-          "/report/update/" + data.reportId,
-          body
-        );
+        await reportAxios.put("/" + data.reportId, body);
         setIsError(false);
         setIsEditMode(false);
         window.location.reload();
@@ -103,7 +105,7 @@ const ReportBox = ({ bookId, data, endPageNum }: Props) => {
   const handleDelete = async () => {
     if (data && window.confirm("독후감을 삭제하시겠습니까?")) {
       try {
-        await axiosInstance.put("/report/delete/" + data.reportId);
+        await reportAxios.delete("/" + data.reportId);
         setIsError(false);
         alert("독후감이 삭제되었습니다.");
         window.location.reload();
@@ -122,9 +124,13 @@ const ReportBox = ({ bookId, data, endPageNum }: Props) => {
       <StyledReportBox>
         <div className="box-top">
           {!isEditMode && (
-            <StyledSmallSubBtn onClick={() => setIsEditMode(true)}>수정</StyledSmallSubBtn>
+            <StyledSmallSubBtn onClick={() => setIsEditMode(true)}>
+              수정
+            </StyledSmallSubBtn>
           )}
-          <StyledSmallDeleteBtn onClick={handleDelete}>삭제</StyledSmallDeleteBtn>
+          <StyledSmallDeleteBtn onClick={handleDelete}>
+            삭제
+          </StyledSmallDeleteBtn>
         </div>
         <form className="main" onSubmit={handleFetch}>
           {data ? (

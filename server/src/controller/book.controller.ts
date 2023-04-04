@@ -7,6 +7,7 @@ import {
   httpPut,
   request,
   response,
+  httpDelete,
 } from "inversify-express-utils";
 import { inject } from "inversify";
 import TYPES from "../constant/types";
@@ -50,7 +51,7 @@ export class BookController implements interfaces.Controller {
     return await this.bookService.createBook(newPost);
   }
 
-  @httpPut("/update/:bookId") //@@업데이트와 삭제 엔드 포인트 어떻게 구현하는지 확인 필요
+  @httpPut("/:bookId")
   private async updateBook(
     @request() req: express.Request,
     @response() res: express.Response
@@ -68,20 +69,14 @@ export class BookController implements interfaces.Controller {
     return await this.bookService.updateBook(updatePost);
   }
 
-  @httpPut("/delete/:bookId")
-  private async delete(
+  @httpDelete("/:bookId")
+  private async deleteBook(
     @request() req: express.Request,
     @response() res: express.Response
   ) {
     const bookId: RequestDeleteBook = Number(req.params.bookId);
 
     return await this.bookService.deleteBook(bookId);
-  }
-
-  //연속 독서 일수 API
-  @httpGet("/days/all")
-  private async getConsecutiveDays(@response() res: express.Response) {
-    return await this.bookService.getConsecutiveDays();
   }
 }
 

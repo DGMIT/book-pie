@@ -14,7 +14,7 @@ import {
 } from "../../styled/StyledBtn";
 import { getErrorMessage } from "../../lib/getErrorMessage";
 import ErrorMsgBox from "../common/ErrorMsgBox";
-import axiosInstance from "../../lib/axiosInstance";
+import { bookAxios } from "../../lib/axiosInstance";
 
 const StyledBookBox = styled(StyledBox)`
   .box-top {
@@ -133,10 +133,10 @@ const BookBox = ({ data }: { data: Book }) => {
   const handleDelete = async () => {
     if (window.confirm("도서를 삭제하시겠습니까?")) {
       try {
-        await axiosInstance.put("/book/delete/" + bookId);
+        await bookAxios.delete("/" + bookId);
         setIsError(false);
-        alert("도서가 삭제되었습니다.");
-        window.location.reload();
+        window.location.replace("/");
+        await alert("도서가 삭제되었습니다.");
       } catch (error) {
         const { response } = error as unknown as AxiosError;
         setIsError(true);

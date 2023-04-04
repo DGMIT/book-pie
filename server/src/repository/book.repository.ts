@@ -49,12 +49,6 @@ class BookRepository
     const queryInfo: QueryInfo = BookQuery(BookQueryId.deleteBook, request);
     return await this.execute(queryInfo.queryStr, queryInfo.queryParams, connection);
   }
-
-  //연속 독서 일수 가져오는 API
-  public async getConsecutiveDays<T>(connection?: any): Promise<T[]> {
-    const queryInfo: QueryInfo = BookQuery(BookQueryId.getConsecutiveDays);
-    return await this.query(queryInfo.queryStr, queryInfo.queryParams, connection);
-  }
 }
 
 

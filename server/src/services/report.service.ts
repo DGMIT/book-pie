@@ -5,7 +5,7 @@ import {
   RequestGetReport,
   RequestCreateReport,
   RequestUpdateReport,
-  RequestDeleteReport
+  RequestDeleteReport,
 } from "../models/report.model";
 import { TransactionResult } from "../models/transaction.model";
 import DBConnectionFactory from "../utils/dbConnectionFactory.util";
@@ -113,6 +113,26 @@ class ReportService {
       connection.beginTransaction();
 
       result = await this.repository.deleteReport(request, connection);
+      connection && connection.commit();
+    } catch (error) {
+      connection && connection.rollback();
+      throw error;
+    } finally {
+      connection && connection.release();
+    }
+
+    return result;
+  }
+
+  public async getConsecutiveDays<T>(): Promise<T[]> {
+    let result: T[];
+    let connection;
+
+    try {
+      connection = await this.mysqlPool.getConnection();
+      connection.beginTransaction();
+
+      result = await this.repository.getConsecutiveDays(connection);
       connection && connection.commit();
     } catch (error) {
       connection && connection.rollback();

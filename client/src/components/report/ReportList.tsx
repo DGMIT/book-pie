@@ -5,7 +5,7 @@ import { Report } from "../../models/report.model";
 import ReportBox from "./ReportBox";
 import ErrorMsgBox from "../common/ErrorMsgBox";
 import { getErrorMessage } from "../../lib/getErrorMessage";
-import axiosInstance from "../../lib/axiosInstance";
+import { reportAxios } from "../../lib/axiosInstance";
 
 const ReportList = ({
   bookId,
@@ -20,9 +20,7 @@ const ReportList = ({
   //전체 독후감 리스트 받아오기
   const getReportList = async () => {
     try {
-      const response = await axiosInstance.get(
-        "http://localhost:4000/report/" + bookId
-      );
+      const response = await reportAxios.get("/" + bookId);
       const data = response.data;
       setReportList(data);
       setIsError(false);
