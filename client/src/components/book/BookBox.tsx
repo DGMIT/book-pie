@@ -7,7 +7,11 @@ import BookModal from "./BookModal";
 import { useLocation } from "react-router-dom";
 import moment from "moment";
 import { StyledBox } from "../../styled/StyledBox";
-import { StyledMainLinkBtn, StyledSmallDeleteBtn, StyledSmallSubBtn } from "../../styled/StyledBtn";
+import {
+  StyledMainLinkBtn,
+  StyledSmallDeleteBtn,
+  StyledSmallSubBtn,
+} from "../../styled/StyledBtn";
 import { getErrorMessage } from "../../lib/getErrorMessage";
 import ErrorMsgBox from "../common/ErrorMsgBox";
 import axiosInstance from "../../lib/axiosInstance";
@@ -17,8 +21,11 @@ const StyledBookBox = styled(StyledBox)`
     display: flex;
     height: 20px;
     justify-content: flex-end;
-    p {
+    .period {
       margin-right: 10px;
+      font-size: 14px;
+      color: var(--dark-gray);
+      line-height: 24px;
     }
   }
   .main {
@@ -31,8 +38,26 @@ const StyledBookBox = styled(StyledBox)`
   }
   .contents-box {
     flex: 1;
+    .author-publisher {
+      height: 20px;
+      font-size: 14px;
+      color: var(--dark-gray);
+    }
     .data {
       height: 70px;
+      line-height: 1.6;
+
+      .count-day {
+        font-weight: bold;
+        font-size: 20px;
+      }
+      .left-count {
+        font-size: 14px;
+        color: var(--point-color);
+      }
+      .not-open-text {
+        color: var(--dark-gray);
+      }
     }
   }
   .button-box {
@@ -122,7 +147,7 @@ const BookBox = ({ data }: { data: Book }) => {
 
   const validateReadBtn = () => {
     if (moment().diff(moment(startDate), "days") < 0) return false;
-    // if (moment().diff(moment(endDate), "days") > 0) return false;
+    if (moment().diff(moment(endDate), "days") > 0) return false;
     return true;
   };
 
@@ -131,14 +156,16 @@ const BookBox = ({ data }: { data: Book }) => {
       {isError && <ErrorMsgBox errMsg={errMsg} />}
       <StyledBookBox>
         <div className="box-top">
-          <p>{`${startDate} ~ ${endDate} (${totalPeriod}일)`}</p>
+          <p className="period">{`${startDate} ~ ${endDate} (${totalPeriod}일)`}</p>
           <StyledSmallSubBtn onClick={handleUpdate}>수정</StyledSmallSubBtn>
           <BookModal
             modalIsOpen={modalIsOpen}
             setModalIsOpen={setModalIsOpen}
             data={data}
           />
-          <StyledSmallDeleteBtn onClick={handleDelete}>삭제</StyledSmallDeleteBtn>
+          <StyledSmallDeleteBtn onClick={handleDelete}>
+            삭제
+          </StyledSmallDeleteBtn>
         </div>
         <div className="main">
           <div className="chart-box">
@@ -154,22 +181,26 @@ const BookBox = ({ data }: { data: Book }) => {
           </div>
           <div className="contents-box">
             <h2>{data.title}</h2>
-            <p>{`${data.author ? data.author : ""}${
-              data.author && data.publisher ? " | " : ""
-            }${data.publisher ? data.publisher : ""}`}</p>
+            <p className="author-publisher">{`${
+              data.author ? data.author : ""
+            }${data.author && data.publisher ? " | " : ""}${
+              data.publisher ? data.publisher : ""
+            }`}</p>
             <div className="data">
               {validateReadBtn() ? (
                 <>
-                  <p>{countDay}일차</p>
+                  <p className="count-day">{countDay}일차</p>
                   <div>
                     <p>일일 권장 독서량 {pagePerDay}p</p>
-                    <p>
+                    <p className="left-count">
                       남은 페이지 / 남은 일수 = {leftPage}p / {leftDay}일
                     </p>
                   </div>
                 </>
               ) : (
-                <div>독후감 작성 기간이 아닙니다.</div>
+                <div className="not-open-text">
+                  독후감 작성 기간이 아닙니다.
+                </div>
               )}
             </div>
             {location.pathname.indexOf("/report") === -1 ? (
