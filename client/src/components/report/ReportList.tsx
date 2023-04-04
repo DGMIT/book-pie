@@ -1,10 +1,11 @@
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { getDate } from "../../lib/getDate";
 import { Report } from "../../models/report.model";
 import ReportBox from "./ReportBox";
 import ErrorMsgBox from "../common/ErrorMsgBox";
 import { getErrorMessage } from "../../lib/getErrorMessage";
+import axiosInstance from "../../lib/axiosInstance";
 
 const ReportList = ({
   bookId,
@@ -19,7 +20,7 @@ const ReportList = ({
   //전체 독후감 리스트 받아오기
   const getReportList = async () => {
     try {
-      const response = await axios.get(
+      const response = await axiosInstance.get(
         "http://localhost:4000/report/" + bookId
       );
       const data = response.data;

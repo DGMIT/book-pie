@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { Book } from "../../models/book.model";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { useState } from "react";
 import BookModal from "./BookModal";
 import { useLocation } from "react-router-dom";

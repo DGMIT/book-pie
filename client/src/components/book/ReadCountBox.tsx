@@ -1,4 +1,4 @@
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { StyledBox } from "../../styled/StyledBox";

@@ -1,5 +1,5 @@
 import BookBox from "./BookBox";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { Book } from "../../models/book.model";
 import ErrorMsgBox from "../common/ErrorMsgBox";

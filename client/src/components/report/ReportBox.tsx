@@ -6,7 +6,7 @@ import {
 } from "../../models/report.model";
 import { FormEvent, useState } from "react";
 import { getDate } from "../../lib/getDate";
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import { StyledInput, StyledTextarea } from "../../styled/StyledInput";
 import { StyledMainBtn, StyledSmallDeleteBtn, StyledSmallSubBtn, StyledSubBtn } from "../../styled/StyledBtn";
 import ErrorMsgBox from "../common/ErrorMsgBox";
