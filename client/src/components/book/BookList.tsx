@@ -5,6 +5,13 @@ import { Book } from "../../models/book.model";
 import ErrorMsgBox from "../common/ErrorMsgBox";
 import { getErrorMessage } from "../../lib/getErrorMessage";
 import axiosInstance from "../../lib/axiosInstance";
+import styled from "styled-components";
+
+const StyledMsg = styled.div`
+  text-align: center;
+  color: var(--dark-gray);
+  font-size: 16px;
+`;
 
 const BookList = () => {
   const [isError, setIsError] = useState<boolean>(false);
@@ -31,12 +38,12 @@ const BookList = () => {
       {isError && <ErrorMsgBox errMsg={errMsg} />}
 
       <ul>
-        {bookList &&
+        {bookList && Array.isArray(bookList) ?
           bookList.map((data: Book) => (
             <li key={data.bookId}>
               <BookBox data={data} />
             </li>
-          ))}
+          )) : <StyledMsg>도서를 등록해주세요.</StyledMsg>}
       </ul>
     </>
   );
