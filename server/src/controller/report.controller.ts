@@ -24,29 +24,6 @@ export class ReportController implements interfaces.Controller {
     return await this.reportService.getReportList(bookId);
   }
 
-  // @httpGet("/:reportId")
-  // private async getReport(
-  //   @request() req: express.Request,
-  //   @response() res: express.Response
-  // ) {
-  //   const reportId = Number(req.params.reportId);
-  //   return await this.reportService.getReport(reportId);
-  // }
-
-  // @httpGet("/days/all")
-  // private async getConsecutiveDays(@response() res: express.Response) {
-  //   try {
-  //     const data = await this.reportService.getConsecutiveDays();
-  //     if (data.result === "OK") {
-  //       res.status(200).json(data);
-  //     } else {
-  //       res.status(404).json(data);
-  //     }
-  //   } catch (err) {
-  //     res.status(500).json({ err });
-  //   }
-  // }
-
   @httpPost("/")
   private async createReport(
     @request() req: express.Request,
