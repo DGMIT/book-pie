@@ -9,7 +9,7 @@ class DBConnectionFactory {
   public async getConnection(): Promise<mysql.PoolConnection> {
     const options: mysql.PoolOptions = {
       host: "localhost",
-      // port: 4000, //왜 여길 써주면 에러나지?
+      port: 3306,
       user: "root",
       password: "localmysql1234",
       database: "BOOK_PIE",
