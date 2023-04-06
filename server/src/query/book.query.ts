@@ -5,7 +5,7 @@ export enum BookQueryId {
   getBook,
   createBook,
   updateBook,
-  deleteBook
+  deleteBook,
 }
 
 export const BookQuery = (

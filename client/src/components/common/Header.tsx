@@ -6,6 +6,7 @@ const StyledHeader = styled.header`
   display: flex;
   justify-content: space-between;
   padding: 20px 0;
+
   > h1 {
     font-size: 34px;
     color: var(--point-color);

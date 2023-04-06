@@ -100,7 +100,7 @@ export const ReportQuery = (
       `);
       queryParams.push(request);
       break;
-      
+
     case ReportQueryId.getConsecutiveDays:
       queryStr.push(`
           SELECT

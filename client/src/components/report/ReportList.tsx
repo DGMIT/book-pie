@@ -52,7 +52,6 @@ const ReportList = ({
   return (
     <>
       {isError && <ErrorMsgBox errMsg={errMsg} />}
-
       <ul>
         {!checkTodayReportExist() && (
           <li>
