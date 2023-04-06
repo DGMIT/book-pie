@@ -1,6 +1,8 @@
 import { injectable } from "inversify";
 import * as mysql from "mysql2/promise";
-
+import * as dotenv from "dotenv";
+import * as path from "path";
+dotenv.config({ path: path.resolve(__dirname, "../../.env") });
 @injectable()
 class DBConnectionFactory {
   private static pool: mysql.Pool;
@@ -8,11 +10,11 @@ class DBConnectionFactory {
 
   public async getConnection(): Promise<mysql.PoolConnection> {
     const options: mysql.PoolOptions = {
-      host: "localhost",
-      port: 3306,
-      user: "root",
-      password: "localmysql1234",
-      database: "BOOK_PIE",
+      host: process.env.BP_DB_HOST,
+      port: Number(process.env.BP_DB_PORT),
+      user: process.env.BP_DB_USER,
+      password: process.env.BP_DB_PASSWORD,
+      database: process.env.BP_DB_NAME,
       waitForConnections: true,
       connectionLimit: 30,
       multipleStatements: true,
