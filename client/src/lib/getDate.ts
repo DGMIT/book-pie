@@ -9,7 +9,7 @@ import "moment/locale/ko";
 export const getDate = (datetime?: string) => {
   let m;
   if (datetime) {
-    m = moment(datetime);
+    m = moment(datetime.slice(0, 10));
   } else {
     m = moment();
   }
