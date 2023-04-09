@@ -9,7 +9,7 @@
 		- 책 제목 / 책 저자 입력
 		- 독서 기간 입력 (시작일, 종료일)
 	2. 독서 일정 조회/수정/삭제
-	3. 연속 독서 일수 표시 (ex. 123일 연속 독서중)
+	3. 연속 독서 일수 표시 (ex. 123일째 독서중🔥)
 
 - 오늘 독서 일정 수행(독서 기록 CRUD)
 	1. 책 읽은 끝 페이지와 독후감 10자 이상 작성시 독후감 등록 가능
@@ -43,7 +43,7 @@
 |DB|Mysql|
 
 ## ⚙️ ERD
-<img width="856" alt="스크린샷 2023-03-30 오전 8 15 57" src="https://user-images.githubusercontent.com/121781293/228700129-8e1a33a3-37b6-448b-abf2-a4d66515e7c1.png">
+<img width="856" alt="북파이 ERD" src="https://s3-us-west-2.amazonaws.com/secure.notion-static.com/173dacab-987b-4b1d-832e-6e7325b98b75/Untitled.png">
 
 
 ## 👩🏻‍💻 실행하기
